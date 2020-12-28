@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		
+		<!-- 엑세스 거부시 실행될 빈과 그 경로 -->
+		<bean id="customAccessDenied" class="com.project.security.CustomAccessDeniedHandler"></bean>
+		
+		<!-- 암호 인코딩 할 빈과 그 경로 -->
+		<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+		
+		<!-- DB이용해서 회원 정보와 권한 불러오기 위한 빈과 그 경로 -->
+		<bean id="customUserDetailsService" class="com.project.security.CustomUserDetailsService"></bean>
+		
+		<!-- 로그인 성공시 불러오는 빈과 그 경로 -->
+		<bean id="customLoginSuccessHandler" class="com.project.security.CustomLoginSuccessHandler"></bean>
+		
+		<security:http auto-config="true" use-expressions="true">
+	
+			<!-- 해당 주소로 들어올 경우 해당 주소에 대한 요청을 모두 스프링 시큐리티가 가로챈다는 뜻 -->
+			<!-- 참고로 해당 내용은 현재 사이트 내 모든 권한은 기본적으로 permitAll 즉 모두에게 열려있다는 뜻 -->
+			<!-- 원래는 각 멤버별 권한 등도 xml에서 했지만, 이외 페이지 별 접근 권한은 어노테이션으로 지정 -->
+			<!-- 정리하면 기본적으로 모든 페이지가 열려있지만 어노테이션을 통해 접근 제한을 한 경우에는 권한이 없으면 로그인이 불가능하다는 뜻 -->
+			<security:intercept-url pattern="/**" access="permitAll"/>
+			
+			<!-- 커스텀 로그인을 위한 로그인 설정 -->
+			<!-- 커스텀 로그인 페이지에서 전달되는 파라미터 이름을 정함 -->
+			<!-- 커스텀 로그인 성공시 커스텀 로그인 성공 핸들러로 이동 -->
+			<security:form-login
+				username-parameter="user_id" 
+				password-parameter="user_pw"
+				login-page="/sign/customLogin"
+				authentication-success-handler-ref="customLoginSuccessHandler"
+			/>
+			
+			<!-- 자동 로그인을 위한 부분 -->
+			<!-- token-validity-seconds는 시간 부분임 -->
+			<security:remember-me
+				data-source-ref="dataSource"
+				token-validity-seconds="259200"
+			/>
+			
+			<!-- 커스텀 로그아웃을 위한 설정 -->
+			<!-- 로그아웃할 경우 "/customLogout"로 url 연결 -->
+			<!-- 로그아웃 성공시  "/board/main" 이동-->
+			<security:logout 
+				logout-url="/sign/customLogout" 
+				invalidate-session="true"
+				delete-cookies="remember-me, JSESSION_ID"
+				logout-success-url="/board/main"
+			/>
+			
+			<!-- 해당 URL 접근시 권한이 없을 경우 아래로 연결 -->
+			<!-- 관리는 스프링이 알아서 함 -->
+			<security:access-denied-handler ref="customAccessDenied" />
+			
+		</security:http>
+		
+		<!-- 권한 매니저 -->
+ 		<security:authentication-manager>
+			
+			<!-- DB와 연동되어  인증, 권한 정보를 해당 레퍼런스에서 가져오게 함 -->
+			<security:authentication-provider user-service-ref="customUserDetailsService">
+
+			<!-- 비밀번호 암호화를 위한 설정 -->
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+			
+			</security:authentication-provider>
+			
+		</security:authentication-manager>
+
+</beans>

@@ -23,4 +23,8 @@ public interface MemberMapper {
 	
 	// 회원 비밀번호 변경을 위한 메서드
 	public void memberPwChange(MemberVO mv);
+	
+	// 비밀번호를 찾아주기 위한 인증 메서드
+	public boolean memberFindPassword(MemberVO mv);
+
 }

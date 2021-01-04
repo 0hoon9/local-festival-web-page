@@ -20,4 +20,10 @@ public interface MemberService {
 	
 	// 회원 비밀 번호 변경을 위한 메서드
 	public boolean mem_passwordModify(MemberVO mv, String new_pw, String new_pw_check);
+	
+	// 회원 비밀 번호를 찾기 위한 메서드
+	public boolean memFindPassword(MemberVO mv);
+	
+	// 회원 비밀 번호를 변경하기 위한 메서드
+	public boolean memChangePassword(MemberVO mv, String new_pw, String new_pw_check);
 }

@@ -78,5 +78,35 @@ public class MemberController {
 		// 전달 받은 자료를 서비스로 전달
 		return service.mem_passwordModify(mv, new_pw, new_pw_check);
 	}
+	
+	// 비밀번호 찾기 위한 (/findPassword) 접속 메서드
+	// 회원 정보가 이름, 비번, 아이디만 있어서 우선 이름, 아이디를 입력해서 둘이 일치할 경우 비밀번호 변경 페이지로 이동하는 메서드
+	@PreAuthorize("isAnonymous()")
+	@GetMapping("/findPassword")
+	public void findPassword() {	
+	}
+	
+	// 비밀번호 찾기 위한 "/findPassword" 페이지에서 ajax 방식으로 전달된 유저 이름과 아이디를 전달받는 post 메서드
+	@ResponseBody
+	@PostMapping("/findPassword")
+	public boolean findPassword(MemberVO mv) {
+		// 서비스의 memFindPassword 메서드로 이름과 아이디 전달
+		return service.memFindPassword(mv);
+	}
+	
+	// "/findPassword" 페이지에서 인증을 하고 나면 해당 페이지 접속 가능함
+	// 인증 후 직접 비밀 번호 변경이 가능한 페이지로 접속을 위한 get 메서드
+	@PreAuthorize("isAnonymous()")
+	@GetMapping("/changePassword")
+	public void chagePasswrod(MemberVO mv, String new_pw, String new_pw_check) {
+	}
+	
+	// 다시 한번 ajax 방식으로 전달된 유저 아이디, 이름, 패스워드 등을 전달 받음 
+	@ResponseBody
+	@PostMapping("/changePassword")
+	// 전달 받은 정보를 service의 memChangePassword 메서드로 이름과 아이디 전달
+	public boolean changePassword(MemberVO mv, String new_pw, String new_pw_check) {
+		return service.memChangePassword(mv, new_pw, new_pw_check);
+	}
 
 }

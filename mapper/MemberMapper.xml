@@ -52,4 +52,9 @@
 		<update id="memberPwChange">
 			update tbl_member set user_pw = #{user_pw} where user_id = #{user_id}
 		</update>
+		
+		<select id="memberFindPassword" resultType="Boolean">
+			select count(user_id) from tbl_member where user_id = #{user_id} and user_Name = #{user_Name}
+		</select>
+		
 	</mapper>

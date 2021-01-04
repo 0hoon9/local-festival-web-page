@@ -124,4 +124,40 @@ public class MemberServiceImple implements MemberService{
 		}
 	}
 
-}
+	
+	// 유저 이름과 아이디를 전달 받아서 DB에 전달해주는 메서드
+	@Override
+	public boolean memFindPassword(MemberVO mv) {
+		// 전달된 정보가 DB가 있다면 true 전달, 없다면 false 전달
+		Boolean result = mapper.memberFindPassword(mv);
+		if(result == true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 유저 이름, 아이디, 새로운 패스워드를 전달 받아 DB를 업데이트 하는 메서드
+	@Override
+	public boolean memChangePassword(MemberVO mv, String new_pw, String new_pw_check) {
+		// 우선 새 패스워드와 확인용 패스워드가 일치하지 않으면 false, 일치한다면 true
+		if(new_pw.equals(new_pw_check)) {
+			
+			// 패스워드가 true일 때, 다시 한번 회원 이름, 비번을 확인함
+			// 이름, 비번이 DB에 존재할 경우 true, DB에 없다면 false
+			if(mapper.memberFindPassword(mv) == true) {
+				// 비밀번호 변경을 위한 새로운 비번 인코딩
+				String password = pw_change(new_pw);
+				
+				// DB에 전달된 mv에 새로 인코딩 된 패스워드 세팅
+				mv.setUser_pw(password);	
+				
+				// 기존에 있었던 패스워드 변경 메서드를 이용해서 해당 계정의 비밀 번호 변경
+				mapper.memberPwChange(mv);
+				return true;
+				}
+			return false;
+			}
+		return false;
+		}
+	}

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.project.mapper.AdminMapper">
+
+	<!-- 데이터 생성 -->
+	<insert id="insert">
+		insert into tbl_admin(bnum,title,content,writer,area,startdate,enddate,img,thumbimg)
+		 values(seq_admin.nextval,#{title},#{content},#{writer},#{area},#{startDate},#{endDate},#{img},#{thumbImg})
+	</insert>
+	
+	<!-- SQL의 일부를 별도로 보관 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							writer like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<!-- 삭제여부(remove)가 'n'인 데이터 전체 조회(페이징) -->
+	<select id="getListWithPaging" resultType="com.project.domain.AdminVO">
+		<![CDATA[
+			select 
+				bnum, title, content, writer, regDate, updatedate 
+			from
+				( 
+				select /*+index_desc(tbl_admin pk_admin)*/ 
+					rownum as rn, bnum, title, content, area, writer, regdate, updatedate, remove, cnt 
+				from 
+					tbl_admin 
+				where 
+		]]>
+		
+		<include refid="criteria"></include>
+		
+		<![CDATA[
+				remove = 'n' and rownum <= #{page} * #{amount}
+				) 
+			where rn > (#{page}-1) * #{amount}
+		 ]]>
+	</select>
+	
+	<!-- 전체 데이터 개수 조회 -->
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_admin
+		where
+		
+		<include refid="criteria"></include>
+		
+		bnum > 0
+	</select>
+	
+	<!-- 전체 데이터 개수 조회 -->
+	<select id="countList" resultType="Integer">
+		select count(*) from tbl_admin where remove = 'n'
+	</select>
+	
+	<!-- 데이터 한개 조회 -->
+	<select id="selectOne" resultType="com.project.domain.AdminVO">
+		select * from tbl_admin where bnum = #{bnum}
+	</select>
+	
+	<!-- 데이터 수정 -->
+	<update id="update">
+		update tbl_admin set title=#{title}, content=#{content}, area=#{area}, startdate=#{startDate}, enddate=#{endDate}, img=#{img}, thumbimg=#{thumbImg}, updateDate=sysdate where bnum=#{bnum}
+	</update>
+	
+	<!-- 삭제여부(remove)가 'y'인 데이터 전체 조회 -->
+	<select id="removeList" resultType="com.project.domain.AdminVO">
+		select * from tbl_admin where remove = 'y' order by bnum desc
+	</select>
+	
+	<!-- 삭제여부(remove)를 'y'로 변경 -->
+	<update id="updateY">
+		update tbl_admin set remove='y' where bnum=#{bnum}
+	</update>
+	
+	<!-- 삭제여부(remove)를 'n'로 변경 -->
+	<update id="updateN">
+		update tbl_admin set remove='n' where bnum=#{bnum}
+	</update>
+	
+	<!-- 데이터 삭제 -->
+	<delete id="delete">
+		delete tbl_admin where bnum = #{bnum}
+	</delete>
+	
+	<!-- 조회수 +1 -->
+	<update id="plusCnt">
+	  update tbl_admin set cnt = cnt+1 where bnum = #{bnum}
+	</update>
+	
+	<!-- 게시글 추천 -->
+	<insert id="rec_insert">
+		insert into tbl_recommend(bnum,user_id) values(#{bnum},#{user_id})
+	</insert>
+	
+	<!-- 게시글 추천수 -->
+	<select id="rec_count" resultType="Integer">
+		select count(*) from tbl_recommend where bnum = #{bnum}
+	</select>
+	
+	<!-- 추천 데이터 삭제(게시글 삭제될 때) -->
+	<delete id="deleteRec">
+		delete tbl_recommend where bnum = #{bnum}
+	</delete>
+	
+</mapper>

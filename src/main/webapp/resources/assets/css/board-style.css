@@ -1,0 +1,153 @@
+/* 사용자 스타일 */
+.board-aside {
+    border: 3px solid #fa8f77;
+    border-radius: 8px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+.board-aside a {
+    color: #fa8f77;
+}
+
+.board-aside b {
+    color: #3d67b4;
+    font-size: large;
+    font-weight: bold;
+}
+
+.table a {
+    color: #fa8f77;
+}
+
+#delBtn .btn {
+    padding: 7px 15px;
+    margin-bottom: 5px;
+}
+
+#paging .pagination {
+    justify-content: center;
+}
+
+.option .nice-select {
+    height: 30px;
+    line-height: 30px;
+}
+
+.option #input-text {
+    margin: 6px;
+    border-radius: 6px;
+}
+
+.btn.search-btn {
+    padding: 12px 15px;
+}
+
+/* 기존에 존재하던 스타일 */
+.footer-social.mt-50 i {
+    margin-top: 11px;
+}
+
+body {
+    font-family: '맑은 고딕', verdana;
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+div#root {
+    width: 90%;
+    margin: 0 auto;
+}
+
+header#header {
+    font-size: 60px;
+    padding: 20px 0;
+}
+
+header#header h1 a {
+    color: #000;
+    font-weight: bold;
+}
+
+nav#nav {
+    padding: 10px;
+    text-align: right;
+}
+
+nav#nav ul li {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+section#container {
+    padding: 20px 0;
+}
+
+section#container::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+aside {
+    float: left;
+    width: 200px;
+}
+
+div#container_box {
+    float: right;
+    width: calc(100% - 200px - 20px);
+}
+
+aside ul li {
+    text-align: center;
+}
+
+aside ul li a {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+}
+
+aside ul li a:hover {
+    background: #eee;
+}
+
+footer#footer {
+    background: #f9f9f9;
+    padding: 20px;
+}
+
+footer#footer ul li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#moveBtn {
+    position: fixed;
+    right: 3%;
+    bottom: 5%;
+}
+
+#board {
+    margin: auto;
+    width: 800px;
+}
+
+#paging {
+    text-align: center;
+}
+
+#delBtn {
+    float: right;
+}

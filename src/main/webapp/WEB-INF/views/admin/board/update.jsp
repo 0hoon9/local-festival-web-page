@@ -55,6 +55,9 @@ form {margin: auto; width: 800px;}
 <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+<!-- Board CSS -->
+<link rel="stylesheet" href="/resources/assets/css/board-style.css">
+
 <!-- ckeditor cdn -->
 <script src="//cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 
@@ -249,6 +252,12 @@ form {margin: auto; width: 800px;}
 						<input type="submit" value="수정하기" id="submit" class="btn btn-success btn-sm">
 					</div>
 			
+				</form>
+				<form role='form' action="/board/modify" method="post">
+					<input type="hidden" name="page" value='<c:out value="${cri.page}"/>'>
+					<input type="hidden" name="amount" value='<c:out value="${cri.amount}"/>'>
+					<input type="hidden" name="keyword" value='<c:out value="${cri.keyword}"/>'>
+					<input type="hidden" name="type" value='<c:out value="${cri.type}"/>'>
 				</form>
 			<hr>
 		</div>

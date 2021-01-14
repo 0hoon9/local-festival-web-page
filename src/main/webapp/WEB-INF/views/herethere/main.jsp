@@ -12,7 +12,7 @@
                                 <div class="hero__caption">
                                 </div>
                                 <!--Hero form -->
-                                <form action="/admin/board/getList" class="search-box" method='get'>
+                                <form action="/herethere/local_fair" class="search-box" method='get'>
                                     <div class="input-form">
                                         <input type="text" name="keyword" placeholder="여기저기 검색">
                                         <input type="hidden" name="type" value="TC">

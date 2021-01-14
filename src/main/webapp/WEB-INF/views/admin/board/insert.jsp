@@ -50,6 +50,9 @@
 <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+<!-- Board CSS -->
+<link rel="stylesheet" href="/resources/assets/css/board-style.css">
+
 <!-- ckeditor cdn -->
 <script src="//cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 

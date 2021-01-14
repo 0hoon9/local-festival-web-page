@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.domain.AdminVO;
 import com.project.domain.Criteria;
@@ -30,14 +32,12 @@ import com.project.domain.RecommendVO;
 import com.project.service.AdminService;
 import com.project.utils.UploadFileUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/admin/*")
-@Log4j
+@Slf4j
 public class AdminController {
 	@Setter(onMethod_=@Autowired)
 	private AdminService service;
@@ -203,7 +203,7 @@ public class AdminController {
 
 	//관리자페이지 데이터수정
 	@PostMapping("board/update")
-	public String update(AdminVO admin, MultipartFile file, HttpServletRequest req) throws Exception {
+	public String update(AdminVO admin, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, MultipartFile file, HttpServletRequest req) throws Exception {
 		
 		//새로운 파일이 등록되었는지 확인
 		if(file.getOriginalFilename() != null && file.getOriginalFilename() != "") {
@@ -230,6 +230,12 @@ public class AdminController {
 		//update.jsp에서 넘어온 데이터를 update메소드의 파라미터로 전달
 		
 		log.info("=====관리자 게시글 수정=====");
+		
+		//리다이렉트시 각 정보 포함
+		rttr.addAttribute("page", cri.getPage());
+		rttr.addAttribute("amount", cri.getAmount());
+		rttr.addAttribute("type", cri.getType());
+		rttr.addAttribute("keyword", cri.getKeyword());
 		
 		return "redirect:/admin/board/getList";
 		//전체조회페이지로 이동
@@ -314,17 +320,6 @@ public class AdminController {
 	//테스트
 	@GetMapping("/test")
 	public void test() {
-		
-	}
-	
-	@GetMapping("/page/map")
-	public void search() {
-		
-	}
-	
-	@GetMapping("/page/main")
-	public void realMain(String search) {
-		System.out.println("search: "+search);
 		
 	}
 }

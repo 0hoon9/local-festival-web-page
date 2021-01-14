@@ -25,6 +25,11 @@
     margin-bottom: 5px;
 }
 
+#resBtn .btn {
+    padding: 7px 15px;
+    margin-bottom: 5px;
+}
+
 #paging .pagination {
     justify-content: center;
 }

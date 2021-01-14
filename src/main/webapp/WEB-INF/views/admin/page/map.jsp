@@ -6,7 +6,7 @@
             <link rel="stylesheet" href="/resources/assets/css/map-style.css">
             <!-- 카카오 라이브러리 services와 clusterer, drawing 라이브러리 불러오기 -->
             <script type="text/javascript"
-                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=본인Appkey입력&libraries=services,clusterer,drawing"></script>
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a43472e5cd8048cc15dc519b763c6dac&libraries=services,clusterer,drawing"></script>
             <!-- jquery cdn불러오기 -->
             <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
             <div class="in-header"></div>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.project.mapper.MemberMapper">
+	
+		<resultMap id="memberMap" type="com.project.domain.MemberVO" >
+			<id property="user_id" column="user_id"/>
+			<result property="user_id" column="user_id"/>
+			<result property="user_pw" column="user_pw"/>
+			<result property="user_Name" column="user_name"/>
+			<result property="regDate" column="regdate"/>
+			<result property="updateDate" column="updatedate"/>
+			<collection property="authList" resultMap="authMap"></collection>
+		</resultMap>
+		
+		<resultMap id="authMap" type="com.project.domain.AuthVO">
+			<result property="user_id" column="user_id"/>
+			<result property="auth" column="auth"/>
+		</resultMap>
+		
+		<select id="call" resultMap="memberMap">
+			SELECT mem.user_id, user_pw, user_name, enabled, regdate, updatedate, auth
+			FROM
+			tbl_member mem LEFT OUTER JOIN tbl_member_auth auth on mem.user_id = auth.user_id
+			WHERE mem.user_id = #{user_id}
+		</select>
+		
+		<!-- 회원 가입을 위한 쿼리 -->
+		<insert id="memberRegister">
+			insert into tbl_member (user_id, user_pw, user_Name, regDate)
+			values ( #{user_id}, #{user_pw}, #{user_Name}, sysdate )
+		</insert>
+		
+		<!-- 회원 권한 부여를 위한 쿼리 -->
+		<insert id="memberAuthResister">
+			insert into tbl_member_auth (user_id, auth) values (#{user_pw}, 'ROLE_MEMBER')
+		</insert>
+		
+		<!-- 회원 아이디 중복 여부를 위한 쿼리 -->
+		<select id="memberCheck" resultType="boolean">
+			select count(user_id) from tbl_member where user_id = #{user_id}
+		</select>
+		
+		<!-- 회원 비밀번호를 가져오기 위한 쿼리 -->
+		<select id="memberPwCheck" resultType="String">
+			select user_pw from tbl_member where user_id=#{user_id}
+		</select>
+		
+		<!-- 회원 비밀 번호 변경을 위한 쿼리 -->
+		<update id="memberPwChange">
+			update tbl_member set user_pw = #{user_pw} where user_id = #{user_id}
+		</update>
+		
+		<select id="memberFindPassword" resultType="Boolean">
+			select count(user_id) from tbl_member where user_id = #{user_id} and user_Name = #{user_Name}
+		</select>
+		
+	</mapper>

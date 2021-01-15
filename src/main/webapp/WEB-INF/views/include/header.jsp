@@ -58,7 +58,7 @@
                                 <nav>
                                     <ul id="navigation">
                                         <li><a href="main">홈</a></li>
-                                        <li><a href="../page/map">간편보기</a></li>
+                                        <li><a href="map">간편보기</a></li>
                                         <li><a href="popular">인기</a>
                                         <li><a href="main_travel">여행지</a>
                                             <ul class="submenu">

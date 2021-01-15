@@ -4,21 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.domain.Criteria;
 import com.project.domain.PageMaker;
+import com.project.domain.RequestVO;
 import com.project.service.AdminService;
 
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/herethere/*")
-@Log4j
+@Slf4j
 public class MainController {
-	
 	@Setter(onMethod_=@Autowired)
 	private AdminService service;
 	
@@ -30,7 +32,6 @@ public class MainController {
 	@GetMapping("/main")
 	public void realMain(String search) {
 		System.out.println("search: "+search);
-		
 	}
 	
 	@GetMapping("/local_fair")
@@ -44,7 +45,7 @@ public class MainController {
 	
 	@GetMapping("/local_fair2")
 	public void local_fair2(Model model, Criteria cri) {
-int total = service.getTotal(cri);
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
 		model.addAttribute("pageMaker", new PageMaker(cri, total));
@@ -53,7 +54,7 @@ int total = service.getTotal(cri);
 	@GetMapping("/local_fair3")
 	public void local_fair3(Model model, Criteria cri) {
 		//페이징처리
-int total = service.getTotal(cri);
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
 		model.addAttribute("pageMaker", new PageMaker(cri, total));
@@ -62,7 +63,7 @@ int total = service.getTotal(cri);
 	@GetMapping("/local_fair4")
 	public void local_fair4(Model model, Criteria cri) {
 		//페이징처리
-int total = service.getTotal(cri);
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
 		model.addAttribute("pageMaker", new PageMaker(cri, total));
@@ -71,7 +72,7 @@ int total = service.getTotal(cri);
 	@GetMapping("/local_fair5")
 	public void local_fair5(Model model, Criteria cri) {
 		//페이징처리
-int total = service.getTotal(cri);
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
 		model.addAttribute("pageMaker", new PageMaker(cri, total));
@@ -120,5 +121,12 @@ int total = service.getTotal(cri);
 		
 		service.plusCnt(bnum);
 		//조회수+1
+	}
+	
+	//등록요청
+	@ResponseBody
+	@PostMapping("/insertRequest")
+	public void insertRequest(RequestVO request) {
+		service.insertRequest(request);
 	}
 }

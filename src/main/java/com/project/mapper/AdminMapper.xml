@@ -37,11 +37,11 @@
 	<select id="getListWithPaging" resultType="com.project.domain.AdminVO">
 		<![CDATA[
 			select 
-				bnum, title, content, writer, regDate, updatedate 
+				* 
 			from
 				( 
-				select /*+index_desc(tbl_admin pk_admin)*/ 
-					rownum as rn, bnum, title, content, area, writer, regdate, updatedate, remove, cnt 
+				select /*+index_desc(tbl_admin)*/ 
+					rownum as rn, bnum, title, content, area, writer, regdate, updatedate, remove, cnt, thumbImg, startdate, enddate
 				from 
 					tbl_admin 
 				where 
@@ -111,6 +111,11 @@
 		insert into tbl_recommend(bnum,user_id) values(#{bnum},#{user_id})
 	</insert>
 	
+	<!-- 각 게시글 추천여부 -->
+	<select id="rec_check" resultType="com.project.domain.RecommendVO">
+		select * from tbl_recommend where bnum=#{bnum} and user_id=#{user_id}
+	</select>
+	
 	<!-- 게시글 추천수 -->
 	<select id="rec_count" resultType="Integer">
 		select count(*) from tbl_recommend where bnum = #{bnum}
@@ -119,6 +124,81 @@
 	<!-- 추천 데이터 삭제(게시글 삭제될 때) -->
 	<delete id="deleteRec">
 		delete tbl_recommend where bnum = #{bnum}
+	</delete>
+	
+	
+	<!-- 회원 관련 -->
+	
+	<!-- 회원 전체 데이터 개수 조회 -->
+	<select id="memberCount" resultType="Integer">
+		select count(*) from tbl_member
+	</select>
+	
+	<!-- 회원정보 조회하기 -->
+	<select id="memberList" resultType="com.project.domain.MemberVO">
+		select * from tbl_member
+	</select>
+	
+	<!-- 회원정보 조회하기(id내림차순으로) -->
+	<select id="memberListWithPaging" resultType="com.project.domain.MemberVO">
+		<![CDATA[
+			select * from 
+					( 
+					select /*+index_asc(tbl_member)*/
+						rownum as rn, user_id, user_pw, user_name, regdate 
+					from tbl_member
+					where rownum <= #{page} * #{amount}
+					) 
+				where rn > (#{page}-1) * #{amount}
+			]]>
+	</select>
+	
+	<!-- 요청글 전체조회 -->
+	<select id="requestList" resultType="com.project.domain.RequestVO">
+		<![CDATA[
+			select * from (
+    			select a.*, rownum as rn from (
+        			select * from tbl_request order by grpnum desc, grpord asc
+       			)
+       			 a where rownum <= #{page} * #{amount}
+    		) 
+    		where rn > (#{page}-1) * #{amount}
+			]]>
+	</select>
+	
+	<!-- 요청글 데이터 개수 -->
+	<select id="requestCount" resultType="Integer">
+		select count(*) from tbl_request
+	</select>
+	
+	<!-- 요청글 작성 -->
+	<insert id="insertRequest">
+		insert into tbl_request(rnum,title,content,user_id,grpnum) values(seq_request.nextval,#{title},#{content},#{user_id},seq_request.nextval)
+	</insert>
+	
+	<!-- 요청글 답변 -->
+	<insert id="insertResponse">
+		insert into tbl_request(rnum,title,content,user_id,grpnum,grpord,depth) values(seq_request.nextval,#{title},#{content},#{user_id},#{grpnum},1,2)
+	</insert>
+	
+	<!-- 요청글 답변(답변추가할때마다 grpord변경) -->
+	<update id="updateResponse">
+		update tbl_request set grpord = grpord+1 where grpnum = #{grpnum} and grpord > 0
+	</update>
+	
+	<!-- 요청글 답변수정 -->
+	<update id="updateResponseContent">
+		update tbl_request set content = #{content} where rnum = #{rnum}
+	</update>
+	
+	<!-- 요청글 삭제 -->
+	<delete id="deleteRequest">
+		delete tbl_request where grpnum = #{grpnum}
+	</delete>
+	
+	<!-- 답글 삭제 -->
+	<delete id="deleteResponse">
+		delete tbl_request where rnum = #{rnum}
 	</delete>
 	
 </mapper>

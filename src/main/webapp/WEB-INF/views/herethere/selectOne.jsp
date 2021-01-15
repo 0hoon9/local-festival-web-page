@@ -2,6 +2,7 @@
 
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 		<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+			<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 			<!DOCTYPE html>
 			<html>
@@ -10,13 +11,6 @@
 				<meta charset="UTF-8">
 
 				<style type="text/css">
-									 
-				 header#header { font-size:60px; padding:20px 0; }
-				 header#header h1 a { color:#000; font-weight:bold; }
-				 
-				 nav#nav { padding:10px; text-align:right; }
-				 nav#nav ul li { display:inline-block; margin-left:10px; }
-				 				
 					#board {
 						margin: auto;
 						width: 800px;
@@ -25,13 +19,23 @@
 					thead tr th {
 						text-align: center;
 					}
-
-					tfoot tr td {
+					
+					tbody tr th {
 						text-align: center;
 					}
-
-					.countRec {
+					
+					div.btn-group{
+						margin-left: 10px;
+					}
+					
+					#divRec{
+						float: right;
+						margin-right: 30px;
+					}
+					
+					div.countRec {
 						display: inline-block;
+						margin-left: 5px;
 					}
 
 					#img {
@@ -116,8 +120,7 @@
 				<div id="root">
 					<header id="header">
 						<div>
-							<%-- <%@ include file="../include/header.jsp" %> --%>
-							<!-- 헤더에 적용된 css때문에 기본태그 style이 다 변경됨 button,a태그 수정필요 -->
+							<%@ include file="../include/header.jsp" %>
 						</div>
 					</header>
 
@@ -144,14 +147,15 @@
 
 									<thead>
 										<tr>
-											<th colspan="3">${board.bnum}번 게시글
-
+											
+											<th colspan="2"><c:out value="${board.title}" />
+											
 												<!-- url공유 드롭다운 -->
 												<div class="btn-group">
 													<button type="button" id="btnUrl" class="dropdown-toggle" data-toggle="dropdown"
 														aria-expanded="false">
 														<span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-														<span class="caret"></span> <!-- 드롭다운 버튼 -->
+														<!-- <span class="caret"></span> 드롭다운 버튼 -->
 													</button>
 													<ul class="dropdown-menu" role="menu">
 														<li><a id="copy">URL 복사</a></li>
@@ -167,39 +171,60 @@
 														alert("URL이 복사되었습니다")
 													})
 												</script>
-											</th>
 
-											<th>
-												<input type="hidden" id="user_id" value="aa">
-												<!-- aa는 임의값 tbl_member user_id에 동일한 데이터가 있어야 함 -->
-												<button type="button" id="btnRecommend">
-													<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-												</button>
-
-												<!-- 게시글 추천수 -->
-												<div class="countRec">
-													<script>countRec();</script>
+												<!-- 추천버튼 -->
+												<div id="divRec">
+													<sec:authorize access="isAnonymous()">
+														<button type="button" id="btnRecommendAnonymous">
+															<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+														</button>
+                                					</sec:authorize>
+												
+													<sec:authorize access="isAuthenticated()">
+														<button type="button" id="btnRecommendAuthenticated">
+															<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+														</button>
+														<input type="hidden" id="user_id" value="<sec:authentication property='principal.username' />">
+                                					</sec:authorize>
+													
+													<!-- 게시글 추천수 -->
+													<div class="countRec">
+														<script>countRec();</script>
+													</div>
 												</div>
 
 												<!-- 게시글 추천 -->
 												<script>
-													$("#btnRecommend").click(function () {
-
+													$("#btnRecommendAnonymous").click(function(){
+														alert("로그인 후 이용해주세요");
+														return false;
+													});
+												
+													$("#btnRecommendAuthenticated").click(function () {
+														var header = '${_csrf.headerName}'; 
+														var token = '${_csrf.token}';
+														
 														var bnum = $("#bnum").val();
 														var user_id = $("#user_id").val();
 
 														var data = { bnum: bnum, user_id: user_id };
-
+																												
 														$.ajax({
 															url: "/admin/selectOne/insertRec",
 															type: "post",
 															data: data,
-															success: function (count) {
+															beforeSend: function(xhr){
+																xhr.setRequestHeader(header, token);
+															},
+															success: function (str) {
+																alert(str);
 																countRec();
 															}
 														});
 													});
 												</script>
+												
+											
 
 											</th>
 										</tr>
@@ -210,20 +235,23 @@
 										<tr>
 											<th><label>지역</label></th>
 											<td>${board.area}</td>
+										</tr>
+										
+										<tr>
 											<th><label>기간</label></th>
 											<td>${board.startDate} ~ ${board.endDate}</td>
 										</tr>
 
-										<tr>
+										<%-- <tr>
 											<th><label>제목</label></th>
 											<td colspan="3">
 												<c:out value="${board.title}" />
 											</td>
-										</tr>
+										</tr> --%>
 
 										<tr>
 											<th><label>내용</label></th>
-											<td colspan="3">${board.content}</td>
+											<td>${board.content}</td>
 										</tr>
 
 									</tbody>

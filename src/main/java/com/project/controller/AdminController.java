@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -29,6 +30,7 @@ import com.project.domain.AdminVO;
 import com.project.domain.Criteria;
 import com.project.domain.PageMaker;
 import com.project.domain.RecommendVO;
+import com.project.domain.RequestVO;
 import com.project.service.AdminService;
 import com.project.utils.UploadFileUtils;
 
@@ -61,14 +63,24 @@ public class AdminController {
 	
 	//관리자페이지 데이터등록
 	@PostMapping("/board/insert")
-	public String insert2(AdminVO admin, MultipartFile file) throws Exception {
+	public String insert2(AdminVO admin, MultipartFile file, String test) throws Exception {
 		
 		String imgUploadPath = uploadPath + File.separator + "imgUpload";
 		//resources폴더에 imgUpload폴더 생성, 파일이 저장될 기본폴더
 		String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
 		//위의 폴더를 기준으로 연웡일 폴더 생성
+		
 		String fileName = null;
-
+		
+		System.out.println("테스트 "+test);
+		System.out.println("관리자 페이지 글 등록 메서드 진입");
+		System.out.println("지역 "+admin.getArea());
+		System.out.println("제목 "+admin.getTitle());
+		System.out.println("내용 "+admin.getContent());
+		System.out.println("글쓴이"+admin.getWriter());
+		System.out.println("파일"+file);
+		System.out.println("파일네임: "+fileName);
+		
 		if(file.getOriginalFilename() != null && file.getOriginalFilename() != "") {
 		//파일 인풋박스에 첨부된 파일이 있다면(=첨부된 파일 이름이 있다면)
 			fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);
@@ -100,6 +112,7 @@ public class AdminController {
 	//ck에디터에서 파일 업로드
 	@PostMapping("/admin/ckUpload")
 	public void postCKEditorImgUpload(HttpServletResponse res, @RequestParam MultipartFile upload) throws Exception {
+		System.out.println("ck에디터 진입");
 	 
 		 //랜덤문자 생성
 		 UUID uuid = UUID.randomUUID();
@@ -186,11 +199,21 @@ public class AdminController {
 	
 	//게시글 추천
 	@ResponseBody
-	@PostMapping("/selectOne/insertRec")
-	public void insertRecommend(RecommendVO rec) {
-		service.rec_insert(rec);
+	@PostMapping(value="/selectOne/insertRec", produces="application/text; charset=utf8")
+	public String insertRecommend(RecommendVO rec) {
 		
-		log.info("=====회원id '"+rec.getUser_id()+"'의 게시글 "+rec.getBnum()+"번 추천=====");
+		RecommendVO reco = new RecommendVO();
+		reco.setBnum(rec.getBnum());
+		reco.setUser_id(rec.getUser_id());
+						
+		if(service.rec_check(reco) == null) {
+			service.rec_insert(rec);
+			log.info("=====회원id '"+rec.getUser_id()+"'의 게시글 "+rec.getBnum()+"번 추천=====");
+			return "추천완료";
+		}
+		else {
+			return "이미 추천하였습니다";
+		}
 	}
 	
 	//게시글 추천수
@@ -204,7 +227,7 @@ public class AdminController {
 
 	//관리자페이지 데이터수정
 	@PostMapping("board/update")
-	public String update(AdminVO admin, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, MultipartFile file, HttpServletRequest req) throws Exception {
+	public String update(AdminVO admin, MultipartFile file, HttpServletRequest req, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) throws Exception {
 		
 		//새로운 파일이 등록되었는지 확인
 		if(file.getOriginalFilename() != null && file.getOriginalFilename() != "") {
@@ -310,13 +333,86 @@ public class AdminController {
 
 	}
 	
-	///////////////
+	/////회원 관련////
 	
 	//관리자페이지 회원정보 조회
 	@GetMapping("/member/memberList")
-	public void memberList() {
+	public void memberList(Model model, Criteria cri) {
+		log.info("=====관리자: 회원정보 조회=====");
+		log.info("=====현재페이지: "+cri.getPage()+"페이지=====");
+		
+		//페이징처리
+		int total = service.getTotal(cri);
+		
+		model.addAttribute("list", service.getListWithPaging(cri));
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
+	}
+	
+	//관리자페이지 회원 댓글관리 조회
+	@GetMapping("/member/reply")
+	public void reply() {
 		
 	}
+	
+	//관리자페이지 회원 등록요청 조회
+	@GetMapping("/member/request")
+	public void request(Model model, Criteria cri) {
+		log.info("=====관리자: 등록요청 조회=====");
+		log.info("=====현재페이지: "+cri.getPage()+"페이지=====");
+		
+		//오늘날짜구하기
+		Date now = new Date();
+		model.addAttribute("now", now);
+		
+		//페이징처리
+		int total = service.getTotal(cri);
+		
+		model.addAttribute("list", service.getListWithPaging(cri));
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
+	}
+	
+	//관리자페이지 회원 등록요청 답글
+	@ResponseBody
+	@PostMapping("/member/request/insertResponse")
+	public void insertResponse(RequestVO request) {
+		
+		service.updateResponse(request.getGrpnum()); //답글달때마다 grpord변경
+		service.insertResponse(request); //답글달기
+		
+		log.info("=====관리자: "+request.getGrpnum()+"번 등록요청 답변완료=====");
+	}
+	
+	//관리자페이지 회원 등록요청 답글수정
+	@ResponseBody
+	@PostMapping("/member/request/updateResponse")
+	public void updateResponse(RequestVO request) {
+		
+		service.updateResponseContent(request); //답글수정
+		
+		log.info("=====관리자: "+request.getRnum()+"번 답변수정=====");
+	}
+	
+	//관리자페이지 회원 선택한 요청글 삭제
+	@ResponseBody
+	@PostMapping("/request/selectRequestDelete")
+	public void selectRequestDelete(@RequestParam(value="chbox[]") List<String> chArr, RequestVO request) {
+		
+		Long rnum;
+		Long grpnum;
+		
+		for(String i : chArr) {   
+			rnum = Long.parseLong(i);
+			grpnum = Long.parseLong(i);
+
+			request.setGrpnum(grpnum); //답글달린 요청글 삭제
+			service.deleteRequest(grpnum);;
+			request.setRnum(rnum); //답글삭제
+			service.deleteResponse(rnum);
+			log.info("=====관리자: "+rnum+"번 요청글 삭제=====");
+		}
+	}
+	
+	
 	
 	//테스트
 	@GetMapping("/test")

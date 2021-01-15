@@ -2,12 +2,36 @@
 
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 		<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+		<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+		
 			<!DOCTYPE html>
 			<html>
 
 			<head>
 				<meta charset="UTF-8">
-				<title>관리자 메인페이지</title>
+				<title>관리자페이지</title>
+				
+				<style type="text/css">
+					#moveBtn {
+					    position: fixed;
+					    right: 3%;
+					    bottom: 5%;
+					}
+					
+					#board {
+					    margin: auto;
+					    width: 800px;
+					}
+					
+					#paging {
+					    text-align: center;
+					}
+					
+					#delBtn {
+					    float: right;
+					}
+				</style>
+				
 				<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 				<!-- 합쳐지고 최소화된 최신 CSS -->
 				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -23,24 +47,24 @@
 				<div id="root">
 					<header id="header">
 						<div>
-							<%@ include file="../include/header.jsp" %>
+							<%@ include file="../../include/header.jsp" %>
 						</div>
 					</header>
 					<nav id="nav">
 						<div>
-							<%@ include file="../include/nav.jsp" %>
+							<%@ include file="../../include/nav.jsp" %>
 						</div>
 					</nav>
 
 					<section id="container">
 						<aside>
-							<%@ include file="../include/aside.jsp" %>
+							<%@ include file="../../include/aside.jsp" %>
 						</aside>
 						<div id="container_box">
 							<h3>게시글 목록</h3>
 							<hr>
 							<div id="board">
-
+							
 								<div id="delBtn">
 									<button type="button" id="selectDeleteBtn" class="btn btn-link btn-sm">
 										<span class="glyphicon glyphicon-trash" aria-hidden="true">삭제</span>
@@ -49,6 +73,9 @@
 									<script>
 										//선택한 게시글 삭제여부 'y'로 변경		
 										$("#selectDeleteBtn").click(function () {
+											var header = '${_csrf.headerName}'; 
+											var token = '${_csrf.token}';
+											
 											var checkArr = new Array();
 
 											$("input[name=bnum]:checked").each(function () {
@@ -59,6 +86,9 @@
 												url: "/admin/getList/selectDelete",
 												type: "post",
 												data: { chbox: checkArr },
+												beforeSend: function(xhr){
+													xhr.setRequestHeader(header, token);
+												},
 												success: function () {
 													location.href = "/admin/board/getList";
 												}
@@ -139,6 +169,7 @@
 											})
 										</script>
 									</div>
+									
 								</table>
 								<div>
 									<div class="option">
@@ -202,12 +233,7 @@
 							</div>
 						</div>
 					</section>
-					<footer id="footer">
-						<div>
-							<%@ include file="../include/footer.jsp" %>
-						</div>
-					</footer>
-					</script>
+		
 					<script>
 						let searchForm = $("#searchForm");
 						$("#searchForm button").on("click", function (e) {
@@ -227,8 +253,13 @@
 							searchForm.submit();
 						})
 					</script>
-				</div>
-
+				
+					<footer id="footer">
+						<div>
+							<%@ include file="../../include/footer.jsp" %>
+						</div>
+					</footer>
+				
 				</div>
 
 			</body>

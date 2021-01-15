@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.project.domain.AdminVO;
 import com.project.domain.Criteria;
+import com.project.domain.MemberVO;
 import com.project.domain.RecommendVO;
+import com.project.domain.RequestVO;
 
 public interface AdminMapper {
 	
@@ -44,9 +46,50 @@ public interface AdminMapper {
 	//게시글 추천
 	public void rec_insert(RecommendVO rec);
 	
+	//각 게시글 추천 여부
+	public RecommendVO rec_check(RecommendVO rec);
+	
 	//게시글 추천수
 	public int rec_count(Long bnum);
 	
 	//추천 데이터 삭제(게시글 삭제될 때)
 	public void deleteRec(Long bnum);
+	
+	
+	////회원 관련////
+
+	//회원 전체 데이터 개수 조회
+	public int memberCount();
+	
+	//회원정보 조회하기
+	public List<MemberVO> memberList();
+	
+	//회원정보 조회하기(id내림차순으로)
+	public List<MemberVO> memberListWithPaging(Criteria cri);
+	
+	//요청글 전체조회
+	public List<RequestVO> requestList(Criteria cri);
+	
+	//요청글 데이터 개수
+	public int requestCount();
+	
+	//요청글 작성
+	public void insertRequest(RequestVO request);
+	
+	//요청글 답변
+	public void insertResponse(RequestVO request);
+	
+	//요청글 답변(답변추가할때마다 grpord변경)
+	public void updateResponse(Long grpnum);
+	
+	//요청글 답변수정
+	public void updateResponseContent(RequestVO request);
+	
+	//요청글 삭제
+	public void deleteRequest(Long grpnum);
+	
+	//답변 삭제
+	public void deleteResponse(Long rnum);
+	
+	
 }

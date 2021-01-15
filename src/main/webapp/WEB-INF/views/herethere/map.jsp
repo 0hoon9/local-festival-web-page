@@ -6,7 +6,7 @@
             <link rel="stylesheet" href="/resources/assets/css/map-style.css">
             <!-- 카카오 라이브러리 services와 clusterer, drawing 라이브러리 불러오기 -->
             <script type="text/javascript"
-                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9ab90baec58228c9ac322f2cd8131a44&libraries=services,clusterer,drawing"></script>
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a43472e5cd8048cc15dc519b763c6dac&libraries=services,clusterer,drawing"></script>
             <!-- jquery cdn불러오기 -->
             <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
             <div class="in-header"></div>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="search-text">
                             <form>
-                                <input type="text" value="" id="keyword" placeholder=" 지역으로 검색">
+                                <input type="text" value="" id="keyword" placeholder="지역으로 검색">
                                 <input type="image" id="image" src="\resources\assets\img\logo\search_icon.png">
                             </form>
                         </div>
@@ -39,7 +39,7 @@
             </div>
             <!-- Kakao API Key -->
             <script type="text/javascript"
-                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9ab90baec58228c9ac322f2cd8131a44"></script>
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=본인Appkey입력"></script>
 
             <script>
                 $(document).ready(function () {
@@ -97,13 +97,13 @@
                                 markers.push(marker);//나중에 marker를 쉽게 제거하기 위해 markers배열에 marker 추가
 
                                 // 인포윈도우에 사용될 정보를 저장할 변수 설정
-                                let iwContent = '<div style="padding:5px";>'
-                                    + festival_name + '<br>'
-                                    + '<a href="https://map.kakao.com/link/map/' + festival_name + "," + latitude + "," + longitude + '"'
+                                let iwContent = '<div style="padding:5px;">'
+                                    + festival_name
+                                    + '<br> <a href="https://map.kakao.com/link/map/' + festival_name + "," + latitude + "," + longitude + '"'
                                     + 'style="color:blue" target="_blank">큰지도보기</a>'
                                     + '<a href="https://map.kakao.com/link/to/' + festival_name + "," + latitude + "," + longitude + '"'
                                     + 'style="color:blue" target="_blank"> 길찾기'
-                                    + "</a><br></div>";
+                                    + "</a></div>";
                                 iwPosition = new kakao.maps.LatLng(latitude, longitude); //인포윈도우 표시 위치
 
                                 // 인포윈도우를 생성
@@ -188,20 +188,20 @@
                                 // 마커와 검색결과 항목에 mouseover시
                                 // 해당 장소 인포윈도우에 장소명을 표시
                                 // mouseout 했을 때 인포윈도우를 닫는다
-                                (function (marker, element) {
+                                (function (marker, title) {
                                     kakao.maps.event.addListener(marker, 'mouseover', function () {
-                                        displayInfowindow(marker, element);
+                                        displayInfowindow(marker, title);
                                     });
-                                    kakao.maps.event.addListener(marker, 'click', function () {
+                                    kakao.maps.event.addListener(marker, 'mouseout', function () {
                                         infowindow.close();
                                     });
                                     itemEl.onmouseover = function () {
-                                        displayInfowindow(marker, element);
+                                        displayInfowindow(marker, title);
                                     };
                                     itemEl.onmouseout = function () {
                                         infowindow.close();
                                     };
-                                })(marker, element);
+                                })(marker, element.festival_place);
                                 fragment.appendChild(itemEl);
                             }
                         });
@@ -241,14 +241,8 @@
 
                     // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수
                     // 인포윈도우에 장소명을 표시
-                    function displayInfowindow(marker, element) {
-                        var content = '<div style="padding:5px;z-index:1;">'
-                            + element.festival_name + '<br>'
-                            + '<a href="https://map.kakao.com/link/map/' + element.festival_name + "," + element.latitude + "," + element.longitude + '"'
-                            + 'style="color:blue" target="_blank">큰지도보기</a>'
-                            + '<a href="https://map.kakao.com/link/to/' + element.festival_name + "," + element.latitude + "," + element.longitude + '"'
-                            + 'style="color:blue" target="_blank"> 길찾기'
-                            + '</div>';
+                    function displayInfowindow(marker, title) {
+                        let content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
                         infowindow.setContent(content);
                         infowindow.open(map, marker);
                     }

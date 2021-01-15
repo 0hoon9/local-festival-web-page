@@ -76,51 +76,64 @@
 								</c:forEach>
 
 							</ul>
+							<!-- 검색 기능 추가 -->
+							<%@ include file="./include/search-form.jsp" %>
 						</div>
-
-						<!-- 검색 기능 추가 -->
-						<%@ include file="./include/search-form.jsp" %>
-
-							<div id="paging">
-								<ul class="pagination">
-									<!-- 이전 버튼의 생성 여부를 확인하여 버튼을 보여줌 -->
-									<c:if test="${pageMaker.prev}">
-										<li>
-											<a href='<c:url value="/herethere/local_fair?page=${pageMaker.startPage-1}"/>'
-												aria-label="Previous">
-												<span aria-hidden="true">&laquo;</span>
-											</a>
-										</li>
-									</c:if>
-
-									<!-- 페이지의 시작 번호와 끝 번호를 이용해 페이지 버튼을 보여줌 -->
-									<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="pageNum">
-										<li>
-											<a href='<c:url value="/herethere/local_fair?page=${pageNum}"/>'>${pageNum}
-											</a>
-										</li>
-									</c:forEach>
-
-									<!-- 다음 버튼의 생성 여부를 확인하여 버튼을 보여줌 -->
-									<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-										<li>
-											<a href='<c:url value="/herethere/local_fair?page=${pageMaker.endPage+1}"/>' aria-label="Next">
-												<span aria-hidden="true">&raquo;</span>
-											</a>
-										</li>
-									</c:if>
-								</ul>
-							</div>
 					</section>
+					<div id="paging">
+						<ul class="pagination">
+							<!-- 이전 버튼의 생성 여부를 확인하여 버튼을 보여줌 -->
+							<c:if test="${pageMaker.prev}">
+								<li>
+									<a href='<c:url value="/herethere/local_fair?page=${pageMaker.startPage-1}"/>' aria-label="Previous">
+										<span aria-hidden="true">&laquo;</span>
+									</a>
+								</li>
+							</c:if>
 
-					<footer id="footer">
-						<div>
-							<%@ include file="../include/footer.jsp" %>
-						</div>
-					</footer>
+							<!-- 페이지의 시작 번호와 끝 번호를 이용해 페이지 버튼을 보여줌 -->
+							<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="pageNum">
+								<li>
+									<a href='<c:url value="/herethere/local_fair?page=${pageNum}"/>'>${pageNum}
+									</a>
+								</li>
+							</c:forEach>
 
+							<!-- 다음 버튼의 생성 여부를 확인하여 버튼을 보여줌 -->
+							<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+								<li>
+									<a href='<c:url value="/herethere/local_fair?page=${pageMaker.endPage+1}"/>' aria-label="Next">
+										<span aria-hidden="true">&raquo;</span>
+									</a>
+								</li>
+							</c:if>
+						</ul>
+					</div>
 				</div>
+				<footer id="footer">
+					<div>
+						<%@ include file="../include/footer.jsp" %>
+					</div>
+				</footer>
+				<script>
+					let searchForm = $("#searchForm");
+					$("#searchForm button").on("click", function (e) {
+						if (!searchForm.find("option:selected").val()) {
+							alert("검색종류를 선택하세요");
+							return false;
+						}
 
+						if (!searchForm.find("input[name='keyword']").val()) {
+							alert("키워드를 입력하세요");
+							return false;
+						}
+
+						searchForm.find("input[name='pageNum']").val("1"); //검색결과는 항상 1페이지로
+						e.preventDefault(); //이벤트 중단(페이지 새로고침 중단) 
+
+						searchForm.submit();
+					})
+				</script>
 			</body>
 
 			</html>

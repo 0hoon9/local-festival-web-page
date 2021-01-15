@@ -161,14 +161,15 @@ public class AdminController {
 		Date now = new Date();
 		model.addAttribute("now", now);
 		log.info("=====오늘날짜: " +now+"=====");
-		
+		System.out.println("cri는? "+cri);
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+//		PageMaker pageMaker = new PageMaker();
+//	    pageMaker.setCri(cri);
+//	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	//관리자페이지 한개데이터 조회/수정

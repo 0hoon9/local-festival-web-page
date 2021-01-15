@@ -63,7 +63,7 @@
                                         <li><a href="main_travel">여행지</a>
                                             <ul class="submenu">
                                                 <li><a href="recommend">추천 여행지</a></li>
-                                                <li><a href="local_travel">지역 여행지</a></li>
+                                                <li><a href="local_fair">지역 여행지</a></li>
                                             </ul>
                                         </li>
                                         <li><a href="myPage">My</a></li>

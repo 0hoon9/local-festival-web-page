@@ -1,5 +1,7 @@
 package com.project.domain;
 
+import com.project.domain.Criteria;
+
 import lombok.Data;
 
 @Data
@@ -40,6 +42,22 @@ public class PageMaker { //페이징 처리
         next = endPage * cri.getAmount() < totalCount ? true : false;
         
     }
+    
+    public PageMaker(Criteria cri ,int total) {
+		this.cri=cri;
+		this.totalCount =total;
+		
+		this.endPage =(int) (Math.ceil(cri.getPage()/10.0))*10;
+		this.startPage = this.endPage -9;
+		
+		
+		int realEnd = (int) (Math.ceil((total*1.0) /cri.getAmount()));
+		if(realEnd<this.endPage) {
+			this.endPage =realEnd;
+		}
+		this.prev = this.startPage >1;
+		this.next = this.endPage<realEnd;
+	}
 
 
 }

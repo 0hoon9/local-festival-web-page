@@ -82,5 +82,10 @@ public class AdminServiceImpl implements AdminService{
 		mapper.deleteRec(bnum);
 	}
 
+	@Override
+	public int getTotal(Criteria cri) {
+		return mapper.getTotalCount(cri); 
+	}
+
 
 }

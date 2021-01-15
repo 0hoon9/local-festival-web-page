@@ -16,6 +16,11 @@ public class Criteria { //특정페이지 조회
 		this.amount=10;
 	}
 	
+	public Criteria(int pageNum , int amount) { //생성자
+		this.page = page;
+		this.amount=amount;
+	}
+	
     public void setPage(int page) {
         if(page <= 0) {
             this.page = 1;

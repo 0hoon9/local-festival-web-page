@@ -36,100 +36,79 @@ public class MainController {
 	@GetMapping("/local_fair")
 	public void local_fair(Model model, Criteria cri) {
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair2")
 	public void local_fair2(Model model, Criteria cri) {
-		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair3")
 	public void local_fair3(Model model, Criteria cri) {
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair4")
 	public void local_fair4(Model model, Criteria cri) {
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair5")
 	public void local_fair5(Model model, Criteria cri) {
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair6")
 	public void local_fair6(Model model, Criteria cri) {
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair7")
 	public void local_fair7(Model model, Criteria cri) {
-		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair8")
 	public void local_fair8(Model model, Criteria cri) {
-		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	@GetMapping("/local_fair9")
 	public void local_fair9(Model model, Criteria cri) {
 		//페이징처리
-		PageMaker pageMaker = new PageMaker();
-	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("pageMaker", new PageMaker(cri, total));
 	}
 	
 	//한개데이터 조회

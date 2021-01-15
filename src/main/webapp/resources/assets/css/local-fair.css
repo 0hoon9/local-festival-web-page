@@ -33,6 +33,16 @@ div#board div.title {
     text-align: center;
 }
 
-#paging {
-    text-align: center;
+#paging .pagination {
+    display: inline-block;
+    float: center;
+}
+
+.option .nice-select {
+    clear: inherit;
+    float: inherit;
+    display: inline;
+    padding-left: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }

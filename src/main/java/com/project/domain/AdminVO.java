@@ -1,6 +1,7 @@
 package com.project.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class AdminVO {
 	private String remove; //데이터 삭제여부
 	
 	private Long cnt; //조회수
+	
+	private List<RecommendVO> recList; //추천테이블
+	private Long rec; //count(r.bnum) as rec
 	
 	//private int replyCnt;
 	

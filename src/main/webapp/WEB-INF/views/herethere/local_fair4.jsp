@@ -9,19 +9,18 @@
 				<meta charset="UTF-8">
 
 				<style type="text/css">
-									 
-				 header#header { font-size:60px; padding:20px 0; }
-				 header#header h1 a { color:#000; font-weight:bold; }
-				 
-				 nav#nav { padding:10px; text-align:right; }
-				 nav#nav ul li { display:inline-block; margin-left:10px; }
-				 
 					div#board{
 						text-align: center;
 					}
 					div#board ul li {
 						display: inline-block;
 						margin: 10px;
+					}
+					
+					div.list{
+						width: 300px; height: 330px;
+						border: 1px solid #c2c5db;
+						padding: 10px;
 					}
 
 					div#board div.thumbImg img {
@@ -53,15 +52,14 @@
 				<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 				<link rel="stylesheet" href="/resources/assets/css/board-style.css">
-
+				<link rel="stylesheet" href="/resources/assets/css/local-fair.css">
 			</head>
 
 			<body>
 				<div id="root">
 					<header id="header">
 						<div>
-							<%-- <%@ include file="../include/header.jsp" %> --%>
-								<!-- 헤더에 적용된 css때문에 기본태그 style이 다 변경됨 button,a태그 수정필요 -->
+							<%@ include file="../include/header.jsp" %>
 						</div>
 					</header>
 
@@ -94,20 +92,27 @@
 
 									<c:if test="${list.area eq '대구' or list.area eq '울산' or list.area eq '부산'}">
 										<li>
+										<div class="list">
 											<div class="thumbImg">
-												<img src="${list.thumbImg}">
+												<a href="selectOne?bnum=${list.bnum}"><img src="${list.thumbImg}"></a>
 											</div>
 											<div class="title">
-												<h4><b><a href="selectOne?bnum=${list.bnum}">${list.title}</a></b></h4>
+												<br><h4><b><a href="selectOne?bnum=${list.bnum}">${list.title}</a></b></h4>
 												지역: ${list.area }<br>
 												기간: ${list.startDate } ~ ${list.endDate }
 											</div>
-										</li>
+										</div>
+									</li>
 									</c:if>
 
 								</c:forEach>
 
 							</ul>
+							<!-- 게시물 검색 추가 -->
+						<div>
+							<div class="option">
+							<form id="searchForm" action="/herethere/local_fair4" method="get">
+							<%@ include file="./include/search-form.jsp" %>
 						</div>
 
 						<div id="paging">

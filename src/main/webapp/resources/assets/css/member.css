@@ -1,0 +1,17 @@
+span {
+    display: inline-block;
+    width: 30px;
+    height: 34px;
+    margin-right: 10px;
+}
+
+.form-control {
+    display: inline-block;
+    width: 87%;
+}
+
+#p-head {
+    color: #fa8f77;
+    font-size: 18px;
+    font-weight: bold;
+}

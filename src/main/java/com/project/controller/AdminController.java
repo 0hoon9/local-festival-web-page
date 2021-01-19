@@ -174,15 +174,14 @@ public class AdminController {
 		Date now = new Date();
 		model.addAttribute("now", now);
 		log.info("=====오늘날짜: " +now+"=====");
-		System.out.println("cri는? "+cri);
+		
 		//페이징처리
-//		PageMaker pageMaker = new PageMaker();
-//	    pageMaker.setCri(cri);
-//	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
-		int total = service.getTotal(cri);
+		PageMaker pageMaker = new PageMaker();
+	    pageMaker.setCri(cri);
+	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", new PageMaker(cri, total));
+		model.addAttribute("pageMaker", pageMaker);
 	}
 	
 	//관리자페이지 한개데이터 조회/수정
@@ -342,10 +341,12 @@ public class AdminController {
 		log.info("=====현재페이지: "+cri.getPage()+"페이지=====");
 		
 		//페이징처리
-		int total = service.getTotal(cri);
+		PageMaker pageMaker = new PageMaker();
+	    pageMaker.setCri(cri);
+	    pageMaker.setTotalCount(service.memberCount()); //총 데이터 개수를 전달
 		
-		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", new PageMaker(cri, total));
+		model.addAttribute("member", service.memberListWithPaging(cri));
+		model.addAttribute("pageMaker", pageMaker);
 	}
 	
 	//관리자페이지 회원 댓글관리 조회
@@ -365,10 +366,12 @@ public class AdminController {
 		model.addAttribute("now", now);
 		
 		//페이징처리
-		int total = service.getTotal(cri);
+		PageMaker pageMaker = new PageMaker();
+	    pageMaker.setCri(cri);
+	    pageMaker.setTotalCount(service.requestCount()); //총 데이터 개수를 전달
 		
-		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", new PageMaker(cri, total));
+		model.addAttribute("request", service.requestList(cri));
+		model.addAttribute("pageMaker", pageMaker);
 	}
 	
 	//관리자페이지 회원 등록요청 답글

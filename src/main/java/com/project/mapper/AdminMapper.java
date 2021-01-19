@@ -16,9 +16,6 @@ public interface AdminMapper {
 	//삭제여부(remove)가 'n'인 데이터 전체 조회(페이징)
 	public List<AdminVO> getListWithPaging(Criteria cri);
 	
-	//전체 데이터 조회
-	public int getTotalCount(Criteria cri);
-	
 	//전체 데이터 개수 조회
 	public int countList();
 	

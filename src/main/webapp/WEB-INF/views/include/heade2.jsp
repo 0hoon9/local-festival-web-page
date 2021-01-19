@@ -1,4 +1,3 @@
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!doctype html>
@@ -72,19 +71,9 @@
                         </div>          
                         <!-- Header-btn -->
                         <div class="header-btns d-none d-lg-block f-right">
-                        
-                        <!-- 로그인을 안할 경우 아래 버튼 두개가 보임 -->
-                        <sec:authorize access="isAnonymous()">
                             <a href="/sign/customLogin" class="btn">로그인</a>
-                            <a href="/member/join" class="btn">회원가입</a>
-                        </sec:authorize>
-                        
-                        <!-- 로그인을 할 경우 아래 버튼 두개가 보임 -->
-                        <sec:authorize access="isAuthenticated()">
-                        	<a href="/member/memberAdmin" class="btn">회원정보</a>
-                            <a href="/sign/customLogout" class="btn">로그아웃</a>
-                        </sec:authorize>
-                        
+							<a href="/member/join" class="btn">회원가입</a>
+                            <a href="/admin/main" class="btn">관리자</a>
                         </div>
                         <!-- Mobile Menu -->
                         <div class="col-12">

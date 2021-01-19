@@ -1,9 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-	<div>
-		<div class="option">
-			<!-- cri의 type 체크 후 selected적용 -->
-			<!-- 게시물 검색 폼 -->
-			<form id="searchForm" action="/herethere/local_fair" method="get">
 				<select name="type">
 					<option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}" />>--</option>
 					<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}" />>제목</option>

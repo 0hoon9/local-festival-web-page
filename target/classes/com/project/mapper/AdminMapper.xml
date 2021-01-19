@@ -56,15 +56,15 @@
 		 ]]>
 	</select>
 	
-	<!-- 전체 데이터 개수 조회 -->
+<!-- 전체 데이터 개수 조회
 	<select id="getTotalCount" resultType="int">
 		select count(*) from tbl_admin
 		where
 		
 		<include refid="criteria"></include>
 		
-		bnum > 0
-	</select>
+		bnum > 0 and remove = 'n'
+	</select> -->
 	
 	<!-- 전체 데이터 개수 조회 -->
 	<select id="countList" resultType="Integer">

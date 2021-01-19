@@ -9,7 +9,7 @@
 <body>
 
 <ul>
-	<li><a href="">메인 페이지</a></li>
+	<li><a href="/herethere/main">메인 페이지</a></li>
 </ul>
 <hr>
 </body>

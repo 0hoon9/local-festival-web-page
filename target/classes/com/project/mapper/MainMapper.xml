@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.project.mapper.MainMapper">
+	
+	<!-- 조회수순 -->
+	<select id="selectCnt" resultType="com.project.domain.AdminVO">
+		select * from tbl_admin where remove='n' and cnt > 0 order by cnt desc
+	</select>
+	
+	<!-- 추천수순 -->
+	<resultMap id="recommenMap" type="com.project.domain.AdminVO" >
+		<id property="bnum" column="bnum"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="area" column="area"/>
+		<result property="startDate" column="startdate"/>
+		<result property="endDate" column="enddate"/>
+		<result property="rec" column="count(r.bnum)"/>
+		<collection property="recList" resultMap="recMap"></collection>
+	</resultMap>
+	
+	<resultMap id="recMap" type="com.project.domain.RecommendVO">
+		<result property="bnum" column="bnum"/>
+		<result property="user_id" column="user_id"/>
+	</resultMap>
+	
+	<select id="selectRec" resultMap="recommenMap">
+		select a.bnum,title,content,area,startdate,enddate,count(r.bnum)
+		from tbl_admin a, tbl_recommend r where a.bnum=r.bnum and remove='n' 
+		group by a.bnum,title,content,area,startdate,enddate order by count(r.bnum) desc
+	</select>
+	
+	<!-- SQL의 일부를 별도로 보관 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							writer like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<!-- 각 지역별 데이터 개수(remove='n'인 것만) -->
+	<select id="areaCnt" resultType="Integer">
+		select count(*) from tbl_admin where remove = 'n' and area = #{area}
+	</select>
+	
+	<!-- 전체 데이터 개수 조회 -->
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_admin
+		where
+		
+		<include refid="criteria"></include>
+		
+		bnum > 0 and remove = 'n'
+	</select>
+	
+
+</mapper>

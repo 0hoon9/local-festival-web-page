@@ -30,11 +30,6 @@ public class AdminServiceImpl implements AdminService{
 	}
 	
 	@Override
-	public int getTotal(Criteria cri) {
-		return mapper.getTotalCount(cri); 
-	}
-	
-	@Override
 	public int countList() {
 		return mapper.countList();
 	}

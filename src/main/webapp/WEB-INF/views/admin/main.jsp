@@ -67,6 +67,8 @@ body { font-family:'맑은 고딕', verdana; padding:0; margin:0; }
 			<%@ include file="../include/aside.jsp" %>
 		</aside>
 		<div id="container_box">
+			<h3>관리자 페이지</h3>
+			<hr>
 		</div>
 	</section>
 	

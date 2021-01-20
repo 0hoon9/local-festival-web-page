@@ -13,7 +13,7 @@
 				<style type="text/css">
 					#board {
 						margin: auto;
-						width: 800px;
+						width: 1000px;
 					}
 
 					thead tr th {
@@ -133,7 +133,7 @@
 					<section id="container">
 						<aside>
 							<ul class="board-aside">
-						      <li><a href="/herethere/local_fair">목록보기</a></li>
+						      <li><a href="/herethere/local_fair?page=${cri.page}&amount=${cri.amount}&type=${cri.type}&keyword=${cri.keyword}">목록보기</a></li>
 						    </ul>
 						</aside>
 

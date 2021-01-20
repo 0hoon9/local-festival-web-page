@@ -73,7 +73,7 @@
 
 						<aside>
 							<ul class="board-aside">
-								<li>조회수</li>
+								<li>조회수 중 상위 10개</li>
 							</ul>
 						</aside>
 

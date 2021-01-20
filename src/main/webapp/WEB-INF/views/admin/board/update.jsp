@@ -13,7 +13,7 @@
 				<style type="text/css">
 					form {
 						margin: auto;
-						width: 800px;
+						width: 900px;
 					}
 
 					.select_img img {

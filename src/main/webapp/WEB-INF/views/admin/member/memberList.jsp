@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 
 <style type="text/css">
- #board {margin: auto; width: 850px;}
+ #board {margin: auto; width: 900px;}
  #paging {text-align: center;}
  </style>
 

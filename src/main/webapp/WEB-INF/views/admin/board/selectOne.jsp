@@ -13,7 +13,7 @@
 				<style type="text/css">
 					#board {
 						margin: auto;
-						width: 800px;
+						width: 900px;
 					}
 
 					thead tr th {

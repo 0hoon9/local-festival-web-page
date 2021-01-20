@@ -12,7 +12,7 @@
 
 <style type="text/css">
  h5{text-align: center;}
- #board {margin: auto; width: 800px;}
+ #board {margin: auto; width:900px;}
  #divSelectDeleteBtn {float: right; margin-bottom: 10px;}
  div#content, div#response, div#updateResponse{display: none;}
  div#paging {text-align: center;}

@@ -135,7 +135,7 @@
                                 <sec:authorize access="isAuthenticated()">
                                     <div class="header-btns d-none d-lg-block f-right">
                                         <a href="/member/memberAdmin" class="btn">회원정보</a>
-                                        <a href="/admin/main" class="btn">관리자</a>
+                                        <a href="/admin/board/getList" class="btn">관리자</a>
                                         <a href="/sign/customLogout" class="btn">로그아웃</a>
                                     </div>
                                 </sec:authorize>

@@ -25,10 +25,15 @@ public class MainServiceImpl implements MainService {
 	public List<AdminVO> selectRec() {
 		return mapper.selectRec();
 	}
+	
+	@Override
+	public List<AdminVO> selectArea(Criteria cri) {
+		return mapper.selectArea(cri);
+	}
 
 	@Override
-	public int areaCnt(String area) {
-		return mapper.areaCnt(area);
+	public int areaCnt(Criteria cri) {
+		return mapper.areaCnt(cri);
 	}
 	
 	@Override

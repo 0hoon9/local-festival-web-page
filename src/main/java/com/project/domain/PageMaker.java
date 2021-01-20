@@ -1,5 +1,11 @@
 package com.project.domain;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import lombok.Data;
 
 @Data
@@ -40,6 +46,30 @@ public class PageMaker { //페이징 처리
         next = endPage * cri.getAmount() < totalCount ? true : false;
         
     }
-
+    
+    //UriComponents는 URI를 생성해주는 클래스
+    public String makeQuery(int page) {
+    	
+     UriComponents uriComponents =
+       UriComponentsBuilder.newInstance()
+       .queryParam("page", page)
+       .queryParam("amount", cri.getAmount())
+       .build();
+       
+     return uriComponents.toUriString();
+    }
+    
+    public String makeSearch(int page) {
+    	
+        UriComponents uriComponents =
+          UriComponentsBuilder.newInstance()
+          .queryParam("page", page)
+          .queryParam("amount", cri.getAmount())
+          .queryParam("type", cri.getType())
+          .queryParam("keyword", cri.getKeyword())
+          .build();
+          
+        return uriComponents.toUriString();
+    }
 
 }

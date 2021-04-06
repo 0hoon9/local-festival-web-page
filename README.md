@@ -60,7 +60,7 @@ View는 WEB-INF 하위폴더의 views에서 관리합니다.
 ### KaKao Map API
 ---
 사용법: [kakao developer](https://developers.kakao.com/)를 참조하세요.  
-logic: 가공한 데이터(json)파일을 jquery의 .getJSON()으로 가져와 KaKao API문법에 맞게 사용했습니다.  
+로직: 가공한 데이터(json) 파일을 jquery의 .getJSON()으로 가져와 KaKao API사용법에 맞게 사용했습니다.  
 세부사항: 주석 확인  
 <br/>
 

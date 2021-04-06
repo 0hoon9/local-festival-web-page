@@ -33,10 +33,31 @@ View는 WEB-INF 하위폴더의 views에서 관리합니다.
 <br/>
   
 ### 스타일
+---
 부트스트랩 템플릿을 사용하여 커스텀 하였습니다.  
 원본: [themewagon에서 제공하는 template](https://themewagon.com/themes/free-responsive-bootstrap-4-html5-hosting-website-template-fastes/)  
 <br/>
-  
+
+### 데이터 가공 (JupytherLab, Python3, Excel, Oracle sql developer)
+---
+데이터 가공 중 데이터의 개수를 조정하는 단계에서  
+더미데이터를 추가해 좌표와 주소가 일치하지 않는 이슈가 존재합니다.  
+프로그래밍 로직에는 오류가 없습니다.  
+![parsing](https://user-images.githubusercontent.com/76147992/113667737-2a3cad80-96ec-11eb-96ff-e17fab6d1843.JPG)  
+<br/>
+
+### MyBatis
+---
+![mybatis](https://user-images.githubusercontent.com/76147992/113667262-7affd680-96eb-11eb-8c48-d74d9feffaff.jpg)  
+<br/>
+
+### KaKao Map API
+---
+사용법: KaKao Developer ![kakao developer](https://developers.kakao.com/)를 참조하세요.
+logic: 가공한 데이터(json)파일을 jquery의 .getJSON()으로 가져와 KaKao API문법에 맞게 사용했습니다.
+세부사항: 주석 확인  
+<br/>
+
 ### 담당업무
 ---
-![담당파트](https://user-images.githubusercontent.com/76147992/113662235-aaf6ac00-96e2-11eb-8213-9e78b7ac2d2b.jpg)
+![담당파트](https://user-images.githubusercontent.com/76147992/113665774-0af05100-96e9-11eb-8b06-64b756b74667.jpg)

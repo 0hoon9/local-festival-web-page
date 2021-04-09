@@ -57,8 +57,9 @@ View는 WEB-INF 하위폴더의 views에서 관리합니다.
 ![mybatis](https://user-images.githubusercontent.com/76147992/113667262-7affd680-96eb-11eb-8c48-d74d9feffaff.jpg)  
 <br/>
 
-### KaKao Map API
+### KaKao Map API 적용
 ---
+![k map](https://user-images.githubusercontent.com/76147992/114157020-2617c680-995e-11eb-9a50-f5053c9e1c71.png)  
 사용법: [kakao developer](https://developers.kakao.com/)를 참조하세요.  
 로직: 가공한 데이터(json) 파일을 jquery의 .getJSON()으로 가져와 KaKao API사용법에 맞게 사용했습니다.  
 세부사항: 주석 확인  

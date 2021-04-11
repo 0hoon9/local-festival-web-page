@@ -203,7 +203,7 @@
                                     kakao.maps.event.addListener(marker, 'mouseover', function () {
                                         displayInfowindow(marker, element);
                                     });
-                                    kakao.maps.event.addListener(marker, 'onClick', function () {
+                                    kakao.maps.event.addListener(marker, 'click', function () {
                                         infowindow.close();
                                     });
                                     itemEl.onmouseover = function () {

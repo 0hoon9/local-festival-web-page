@@ -44,9 +44,15 @@
 			FROM (
 				SELECT ROWNUM RN, A.* 
 					FROM (
+<<<<<<< HEAD
 							select a.bnum,title,content,area,startdate,enddate,thumbimg,count(r.bnum)
 			from tbl_admin a, tbl_recommend r where a.bnum=r.bnum and remove='n' 
 			group by a.bnum,title,content,area,startdate,enddate,thumbimg order by count(r.bnum) desc 
+=======
+							select a.bnum,title,content,area,startdate,enddate,count(r.bnum)
+			from tbl_admin a, tbl_recommend r where a.bnum=r.bnum and remove='n' 
+			group by a.bnum,title,content,area,startdate,enddate order by count(r.bnum) desc 
+>>>>>>> 19792d409f9274741829109a856233fa1b34e92a
 							) A
 					)
 		WHERE RN BETWEEN 0 AND 10

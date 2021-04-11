@@ -134,6 +134,7 @@
 
 								<sec:authorize access="hasRole('ROLE_MEMBER')">
                                     <div class="header-btns d-none d-lg-block f-right">
+<<<<<<< HEAD
 	                                	<a href="/member/memberAdmin" class="btn">회원정보</a>
 	                                    <a href="/sign/customLogout" class="btn">로그아웃</a>
                                     </div>
@@ -144,6 +145,11 @@
                                     	<a href="/admin/board/getList" class="btn">관리자</a>
 	                                	<a href="/member/memberAdmin" class="btn">회원정보</a>
 	                                    <a href="/sign/customLogout" class="btn">로그아웃</a>
+=======
+                                        <a href="/member/memberAdmin" class="btn">회원정보</a>
+                                        <a href="/admin/board/getList" class="btn">관리자</a>
+                                        <a href="/sign/customLogout" class="btn">로그아웃</a>
+>>>>>>> 19792d409f9274741829109a856233fa1b34e92a
                                     </div>
                                 </sec:authorize>
 

@@ -48,6 +48,17 @@
     padding: 12px 15px;
 }
 
+#search {
+    display: flex;
+    justify-content: center;
+    height: 30px;
+}
+
+#search .nice-select {
+    height: 30px;
+    line-height: 28px;
+}
+
 /* 기존에 존재하던 스타일 */
 .footer-social.mt-50 i {
     margin-top: 11px;

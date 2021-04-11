@@ -38,6 +38,11 @@
 			insert into tbl_member_auth (user_id, auth) values (#{user_pw}, 'ROLE_MEMBER')
 		</insert>
 		
+		<!-- 운영자 권한 부여를 위한 쿼리 -->
+		<insert id="adminAuthResister">
+			insert into tbl_member_auth (user_id, auth) values (#{user_pw}, 'ROLE_ADMIN')
+		</insert>
+		
 		<!-- 회원 아이디 중복 여부를 위한 쿼리 -->
 		<select id="memberCheck" resultType="boolean">
 			select count(user_id) from tbl_member where user_id = #{user_id}

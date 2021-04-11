@@ -8,7 +8,17 @@
 	
 	<!-- 조회수순 -->
 	<select id="selectCnt" resultType="com.project.domain.AdminVO">
-		select * from tbl_admin where remove='n' and cnt > 0 order by cnt desc
+		SELECT * 
+			FROM (
+				SELECT ROWNUM RN, A.* 
+					FROM (
+							SELECT * 
+							FROM tbl_admin
+	                        where remove = 'n' and cnt>0
+							ORDER BY cnt DESC 
+							) A
+					)
+		WHERE RN BETWEEN 0 AND 10
 	</select>
 	
 	<!-- 추천수순 -->
@@ -19,6 +29,7 @@
 		<result property="area" column="area"/>
 		<result property="startDate" column="startdate"/>
 		<result property="endDate" column="enddate"/>
+		<result property="thumbImg" column="thumbimg"/>
 		<result property="rec" column="count(r.bnum)"/>
 		<collection property="recList" resultMap="recMap"></collection>
 	</resultMap>
@@ -29,9 +40,16 @@
 	</resultMap>
 	
 	<select id="selectRec" resultMap="recommenMap">
-		select a.bnum,title,content,area,startdate,enddate,count(r.bnum)
-		from tbl_admin a, tbl_recommend r where a.bnum=r.bnum and remove='n' 
-		group by a.bnum,title,content,area,startdate,enddate order by count(r.bnum) desc
+		SELECT * 
+			FROM (
+				SELECT ROWNUM RN, A.* 
+					FROM (
+							select a.bnum,title,content,area,startdate,enddate,thumbimg,count(r.bnum)
+			from tbl_admin a, tbl_recommend r where a.bnum=r.bnum and remove='n' 
+			group by a.bnum,title,content,area,startdate,enddate,thumbimg order by count(r.bnum) desc 
+							) A
+					)
+		WHERE RN BETWEEN 0 AND 10
 	</select>
 	
 	<!-- SQL의 일부를 별도로 보관 -->
@@ -46,8 +64,8 @@
 						<when test="type == 'C'.toString()">
 							content like '%'||#{keyword}||'%'
 						</when>
-						<when test="type == 'W'.toString()">
-							writer like '%'||#{keyword}||'%'
+						<when test="type == 'A'.toString()">
+							area like '%'||#{keyword}||'%'
 						</when>
 					</choose>
 				</trim>
@@ -55,9 +73,31 @@
 		</trim>
 	</sql>
 	
+	<!-- 각 지역별 데이터 조회 -->
+	<select id="selectArea" resultType="com.project.domain.AdminVO">
+		<![CDATA[
+		select 
+			* 
+		from
+			( 
+			select /*+index_desc(tbl_admin)*/ 
+				rownum as rn, bnum, title, area, cnt, thumbImg, startdate, enddate
+			from 
+				tbl_admin where
+				]]>
+				
+				<include refid="criteria"></include>
+				
+			<![CDATA[	
+			remove = 'n' and rownum <= #{page} * #{amount}
+			) 
+		where rn > (#{page}-1) * #{amount}
+		]]>
+	</select>
+	
 	<!-- 각 지역별 데이터 개수(remove='n'인 것만) -->
 	<select id="areaCnt" resultType="Integer">
-		select count(*) from tbl_admin where remove = 'n' and area = #{area}
+		select count(*) from tbl_admin where <include refid="criteria"></include> remove = 'n'
 	</select>
 	
 	<!-- 전체 데이터 개수 조회 -->

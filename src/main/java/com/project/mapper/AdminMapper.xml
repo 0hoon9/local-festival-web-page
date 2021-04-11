@@ -12,25 +12,13 @@
 		 values(seq_admin.nextval,#{title},#{content},#{writer},#{area},#{startDate},#{endDate},#{img},#{thumbImg})
 	</insert>
 	
-	<!-- SQL의 일부를 별도로 보관 -->
-	<sql id="criteria">
-		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
-			<foreach item="type" collection="typeArr">
-				<trim prefix="OR">
-					<choose>
-						<when test="type == 'T'.toString()">
-							title like '%'||#{keyword}||'%'
-						</when>
-						<when test="type == 'C'.toString()">
-							content like '%'||#{keyword}||'%'
-						</when>
-						<when test="type == 'W'.toString()">
-							writer like '%'||#{keyword}||'%'
-						</when>
-					</choose>
-				</trim>
-			</foreach>
-		</trim>
+	<sql id="search">
+		<if test="type != null">
+			<if test="type == 'a'.toString()">area like '%' || #{keyword} || '%' and</if>
+			<if test="type == 't'.toString()">title like '%' || #{keyword} || '%' and</if>
+			<if test="type == 'c'.toString()">content like '%' || #{keyword} || '%' and</if>
+			<if test="type == 'tc'.toString()">(title like '%' || #{keyword} || '%') or (content like '%' || #{keyword} || '%') and</if>
+		</if>
 	</sql>
 	
 	<!-- 삭제여부(remove)가 'n'인 데이터 전체 조회(페이징) -->
@@ -47,7 +35,7 @@
 				where 
 		]]>
 		
-		<include refid="criteria"></include>
+		<include refid="search"></include>
 		
 		<![CDATA[
 				remove = 'n' and rownum <= #{page} * #{amount}
@@ -56,19 +44,9 @@
 		 ]]>
 	</select>
 	
-<!-- 전체 데이터 개수 조회
-	<select id="getTotalCount" resultType="int">
-		select count(*) from tbl_admin
-		where
-		
-		<include refid="criteria"></include>
-		
-		bnum > 0 and remove = 'n'
-	</select> -->
-	
 	<!-- 전체 데이터 개수 조회 -->
 	<select id="countList" resultType="Integer">
-		select count(*) from tbl_admin where remove = 'n'
+		select count(*) from tbl_admin where <include refid="search"></include> remove = 'n'
 	</select>
 	
 	<!-- 데이터 한개 조회 -->

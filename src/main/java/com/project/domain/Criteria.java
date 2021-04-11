@@ -17,7 +17,7 @@ public class Criteria { //특정페이지 조회
 	}
 	
 	public Criteria(int pageNum , int amount) {
-		this.page = page;
+		this.page = pageNum;
 		this.amount=amount;
 	}
 

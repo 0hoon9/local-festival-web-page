@@ -13,7 +13,7 @@
 				<style type="text/css">
 					#board {
 						margin: auto;
-						width: 800px;
+						width: 1000px;
 					}
 
 					thead tr th {
@@ -110,7 +110,12 @@
 							$(".countRec").html(cnt);
 						})
 					}
-
+					
+					// 시작과 동시에 게시글 로딩 및 페이징되는 숫자 로딩
+					$(document).ready(function () {
+						reply();
+						reply_count();
+					});
 				</script>
 
 
@@ -133,7 +138,7 @@
 					<section id="container">
 						<aside>
 							<ul class="board-aside">
-						      <li><a href="/herethere/popular_recommend">목록보기</a></li>
+						      <li><a href="/herethere/local_fair?page=${cri.page}&amount=${cri.amount}&type=${cri.type}&keyword=${cri.keyword}">목록보기</a></li>
 						    </ul>
 						</aside>
 
@@ -191,8 +196,14 @@
 													<div class="countRec">
 														<script>countRec();</script>
 													</div>
+													
+													<!-- 즐겨찾기버튼 -->
+													<span>
+														<sec:authorize access="isAuthenticated()">
+														<button class="favorite">즐겨찾기</button>
+														</sec:authorize>
+													</span>
 												</div>
-
 												<!-- 게시글 추천 -->
 												<script>
 													$("#btnRecommendAnonymous").click(function(){
@@ -223,8 +234,204 @@
 														});
 													});
 												</script>
+												<script>
+												$(".favorite").click(function (e) {
+													e.preventDefault();
+													var header = '${_csrf.headerName}';
+													var token = '${_csrf.token}';
+													$.ajax({
+														url: "/favorite/register",
+														type: "post",
+														dataType: "text",
+														data: {
+															user_id: $('#user_id').val(),
+															bnum: ${board.bnum}
+															},
+														beforeSend: function(xhr){
+															xhr.setRequestHeader(header, token);
+															},
+														success : function(data) {
+															if(data=="fail"){
+																alert("이미 즐겨찾기 되있습니다.");
+															} else{
+																alert("즐겨찾기가 성공했습니다.");
+															}
+															},
+														}); // end of ajax
+													}); // end of favorite 클릭
+													
+												</script>
+												<script>
+												<!-- 댓글 생성 함수 -->
+												function reply(nowpage_data) {
+
+													var bnum = ${board.bnum};
+													
+													var page = nowpage_data;
+													
+													if(page == null||page == ""){
+														page = 1;
+													}
+													$('.page').removeAttr('style');
+													
+													$.getJSON("/reply/read_paging?bnum="+bnum+"&page="+page, function (reply) {
+														var reply_c="";
+														var date = "";
+														var year= "";
+														var month = "";
+														var day = "";
+														var hour = "";
+														var minute = "";
+														var second = "";
+														
+														var now;
+														now += "<span class='now_data'>"+page+"<span>";
+														$("#nowp").html(now);
+														
+														$(reply).each(function (i) {
+															date = new Date(reply[i].replyDate);
+															year = date.getFullYear()
+															month = (date.getMonth()+1);
+															day = date.getDate();
+															hour = date.getHours();
+															minute = date.getMinutes();
+															second = date.getSeconds();
+															
+															reply_c += "<tr id="+reply[i].rnum+">"
+															reply_c += "<td>"+"사용자: "+reply[i].replyer+"</td>";
+															reply_c += "<td>"+"댓글번호: "+reply[i].rnum+"</td>";
+															reply_c += "<td>"+"등록일자: "+year+" . "+month+" . "+day+" ("+hour+":"+minute+":"+second+")"+"</td>";
+															reply_c += "<td>"
+															reply_c += '<sec:authorize access="isAnonymous()">';
+															reply_c += "<div style='text-align:center;'><button type='button' class='fakeDelBtn'>X</button><div>";
+															reply_c += '</sec:authorize>';
+															reply_c += '<sec:authorize access="hasRole(\'ROLE_MEMBER\')">';
+															reply_c += "<div style='text-align:center;'><button type='button' value='"+reply[i].rnum+"' id='"+reply[i].rnum+"' class='delBtn'>X</button><div>";
+															reply_c += '</sec:authorize>';
+															reply_c += '<sec:authorize access="hasRole(\'ROLE_ADMIN\')">';
+															reply_c += "<div style='text-align:center;'><button type='button' value='"+reply[i].rnum+"' id='"+reply[i].rnum+"' class='adminDelBtn'>X</button><div>";
+															reply_c += '</sec:authorize>';
+															reply_c += "</td>";
+															reply_c += "</tr>"
+															reply_c += "<tr>"
+															reply_c += "<td colspan='4'>"+reply[i].reply;
+															reply_c += "</tr>"
+
+														})
+														$("#reply").html(reply_c);
+														
+														var temp = 'p'+page
+														$('#'+temp).css({"color": 'red', 'font-size': '20px'});
+													})
+												};
+												</script>
 												
-											
+												<script>
+												<!-- 댓글 아래 페이징 번호 생성 함수 -->
+												function reply_count(data) {
+													var bnum = ${board.bnum};
+													
+													// 숫자 입력이 없을 때
+													if(typeof data == "undefined"){
+														
+													$.getJSON("/reply/reply_count?bnum="+bnum, function (count) {
+														var rpCnt = "";
+														/* console.log("현재 페이징에 필요한 출력 숫자: "+count); */
+															
+														// 페이징 처리할 숫자가 5보다 작을 때
+														if(count <= 5){
+															$(count).each(function (i) {
+																rpCnt += "<tr style='text-align: center'>";
+																rpCnt += "<td colspan='3'>";
+																
+																for(var i = 1; i <= count; i++){
+																	rpCnt += "<a href='' class='page' value='"+i+"' id='p"+i+"'>"+i+"</a> ";
+																	}
+																
+																rpCnt += "</td>";
+																rpCnt += "</tr>";
+																})
+																$("#reply_c").html(rpCnt);
+															} // end of  페이징처리 할 숫자가 5보다 작을 때
+															
+														// 페이징 처리할 숫자가 5보다 클 때
+														if(count > 5){
+															$(count).each(function (i) {
+																rpCnt += "<tr style='text-align: center'>";
+																rpCnt += "<td colspan='3'>";
+																for(var i = 1; i <= 5; i++){
+																	rpCnt += "<a href='' class='page' value='"+i+"' id='p"+i+"'>"+i+"</a> ";
+																	}
+																rpCnt += "<a href='' class='next' value='"+(count-(count-5))+"'>▷</a> ";
+																rpCnt += "</td>";
+																rpCnt += "</tr>";
+																})
+																$("#reply_c").html(rpCnt);
+															} // end of  페이징처리 할 숫자가 5보다 클때
+														
+													}); // end of "/reply/reply_count"로 게시물 번호 전달해서 페이징에 필요한 숫자 전달 제이슨으로 전달 받은 후 처리
+													
+													}; // end of 입력 값이 없을 때 댓글 페이징을 위한 숫자 출력
+													
+													// 숫자 입력이 있을 때
+													if(typeof data != "undefined"){
+														
+														/* console.log("data값: "+ data) */
+														$.getJSON("/reply/reply_count?bnum="+bnum, function (count) {var rpCnt = "";
+															/* console.log("count값 : "+count); */
+															
+															// prev 또는 Next 버튼을 눌렀을 때 페이징 처리할 숫자가 5를 초과할 때
+															if((count>5) && ((count-data) > 5)){
+																$(count).each(function (i) {
+																	rpCnt += "<tr style='text-align: center'>";
+																	rpCnt += "<td colspan='3'>";
+																	rpCnt += data > 0 ? "<a href='' class='prev' value='"+((data)-5)+"'>◁</a> " : ""
+																	for(var i = data; i < data+5; i++){
+																		rpCnt += "<a href='' class='page' value='"+(i+1)+"' id='p"+(i+1)+"'>"+(i+1)+"</a> ";
+																		}
+																	rpCnt += "<a href='' class='next' value='"+(data+5)+"'>▷</a> ";
+																	rpCnt += "</td>";
+																	rpCnt += "</tr>";
+																	})
+																	$("#reply_c").html(rpCnt);
+																} // end of 페이징 처리할 숫자가 5보다 클때
+															
+															// NEXT 버튼 누르거나 댓글을 추가 할 때 페이징 처리할 숫자가 5이하일 때
+															if((count>5) && ((count-data) <= 5)){																
+																$(count).each(function (i) {
+																	rpCnt += "<tr style='text-align: center'>";
+																	rpCnt += "<td colspan='3'>";
+																	rpCnt += "<a href='' class='prev' value='"+((data)-5)+"'>◁</a> ";
+																	for(var i = data; i < (data+(count-data)); i++){
+																		rpCnt += "<a href='' class='page' value='"+(i+1)+"' id='p"+(i+1)+"'>"+(i+1)+"</a> ";
+																		}
+																	rpCnt += "</td>";
+																	rpCnt += "</tr>";
+																	})
+																	$("#reply_c").html(rpCnt);
+																} // end of  페이징처리 할 숫자가 5보다 작을 때
+															
+															// 전체 구현 페이지가 5 이하일 때 댓글을 추가할 때 
+															if(count <= 5){
+																$(count).each(function(i){
+																	rpCnt += "<tr style='text-align: center'>";
+																	rpCnt += "<td colspan='3'>";
+																	for(var i = data; i < (data+(count-data)); i++){
+																		rpCnt += "<a href='' class='page' value='"+(i+1)+"' id='p"+(i+1)+"'>"+(i+1)+"</a> ";
+																		}
+																	rpCnt += "</td>";
+																	rpCnt += "</tr>";
+																	})
+																	$("#reply_c").html(rpCnt);
+																}
+													});
+													}
+													
+												}; // end of 페이징 번호 생성 함수 
+												
+												</script>
+												
+												<div></div>
 
 											</th>
 										</tr>
@@ -257,6 +464,237 @@
 									</tbody>
 
 								</table>
+								
+								<!-- 댓글 테이블 -->
+								<table class="table table-bordered" id="reply">
+								</table>
+								<table class="table table-bordered" id="reply_c">
+								</table>
+								<textarea id="reply_w" style="resize: none;" cols="122" rows="5" placeholder="댓글을 입력해주세요"></textarea>
+								<div style="display: none" id="nowp"></div>
+								
+								
+								<!-- 비로그인시 경고 띄우는 버튼에만 접근 가능 -->
+								<sec:authorize access="isAnonymous()">
+								<br><div style="text-align: right"><input id="anony_replyBtn"type="submit" value="등록"></div>
+								</sec:authorize>
+								
+								<!-- 로그인시 댓글 등록 가능한 버튼에 접근 가능 -->
+								<sec:authorize access="isAuthenticated()">
+								<input id="replyer" type="hidden" value="<sec:authentication property="principal.member.user_id"/>">
+								<br><div style="text-align: right"><input id="auth_replyBtn"type="submit" value="등록"></div>
+								</sec:authorize>
+								
+								<script type="text/javascript">
+								
+								<!-- 비 로그인으로 댓글 버튼 접근시 경고 띄움 -->
+								$("#anony_replyBtn").click(function(){
+									alert("로그인 후 이용해주세요");
+									return false;
+									});
+								
+								<!-- 로그인으로 댓글 버튼 접근시 등록 진행 -->
+								$("#auth_replyBtn").click(function (e) {
+									e.preventDefault();
+									var header = '${_csrf.headerName}';
+									var token = '${_csrf.token}';
+									$.ajax({
+										url: "/reply/write",
+										type: "post",
+										dataType: "json",
+										data: {
+											bnum: ${board.bnum},
+											reply: $("#reply_w").val(),
+											replyer: $("#replyer").val(),
+											},
+										beforeSend: function(xhr){
+											xhr.setRequestHeader(header, token);
+											},
+										success: function (data) {
+											if(data != null){
+												alert("댓글 등록이 성공했습니다");
+												var temp = data;
+												if((data%5)==0&&(data/5)>=1){
+													data = data - 5;
+													}
+												else{
+													data = data-(data%5);
+													}
+												reply_count(data);
+												reply(temp);
+												}
+											}
+											});
+									});
+								</script>
+								
+								<!-- 로그인 없이 댓글 삭제 버튼을 누를 경우 실행됨 -->
+								<script>
+								$(document).on("click", ".fakeDelBtn", function(){
+									alert("로그인 후 삭제가 가능합니다");
+								})
+								</script>
+								
+								<script>
+								$(document).on("click", ".adminDelBtn", function(){
+									var header = '${_csrf.headerName}';
+									var token = '${_csrf.token}';
+									$.ajax({
+										url: "/reply/admin_delete",
+										type: "post",
+										dataType: "json",
+										data: {
+											rnum: $(this).attr('id'),
+											nowpage: $(".now_data").text(),
+											bnum: ${board.bnum},
+											},
+										beforeSend: function(xhr){
+											xhr.setRequestHeader(header, token);
+											},
+										success: function (data) {
+											alert("댓글이 삭제됐습니다.");
+											if(data[1] != null){
+												var temp = data[1];
+												var paging = data[1];
+												if((paging%5)==0&&(paging/5)>=1){
+													paging = paging - 5;
+													}
+												else{
+													paging = paging-(paging%5);
+													}
+												reply_count(paging);
+												reply(temp);
+												}
+											}
+											});
+								});
+								
+								</script>
+								
+								<script type="text/javascript">
+								<!-- 댓글 삭제버튼 누를 경우 실행됨 -->
+								$(document).on("click",".delBtn",function(){
+									var header = '${_csrf.headerName}';
+									var token = '${_csrf.token}';
+									$.ajax({
+										url: "/reply/delete",
+										type: "post",
+										dataType: "json",
+										data: {
+											rnum: $(this).attr('id'),
+											nowpage: $(".now_data").text(),
+											bnum: ${board.bnum},
+											login_user: $('#replyer').val()
+											},
+										beforeSend: function(xhr){
+											xhr.setRequestHeader(header, token);
+											},
+										success: function (data) {
+											if(data[0] == "success"){
+												alert("댓글이 삭제됐습니다.");
+											} else{
+												alert("본인이 등록한 댓글만 삭제 가능합니다.");
+											}
+											
+											if(data[1] != null){
+												var temp = data[1];
+												var paging = data[1];
+												if((paging%5)==0&&(paging/5)>=1){
+													paging = paging - 5;
+													}
+												else{
+													paging = paging-(paging%5);
+													}
+												reply_count(paging);
+												reply(temp);
+												}
+											}
+											});
+								});
+								
+								<!-- 페이징 숫자를 누르면 해당 숫자에 맞는 댓글 페이지 새로 갱신 -->
+								$(document).on("click", ".page", function(e){
+									e.preventDefault();
+									var header = '${_csrf.headerName}';
+									var token = '${_csrf.token}';
+									$.ajax({
+										url: "/reply/nowpage",
+										type: "get",
+										dataType: "json",
+										data: {
+											nowpage: $(this).attr('value')
+											},
+										beforeSend: function(xhr){
+											xhr.setRequestHeader(header, token);
+											},
+										success: function (data) {
+											if(data != null){
+												/* console.log("전달 받은 값(페이지수): "+data); */
+												var now;
+												now += "<span class='now_data'>"+data+"<span>";
+												$("#nowp").html(now);
+												reply(data);												
+												}
+											}
+											});
+								});
+								
+								<!-- next를 누르면 해당 숫자에 맞는 댓글 페이지 새로 갱신 -->
+								$(document).on("click", ".next", function(e){
+									e.preventDefault();
+									var header = '${_csrf.headerName}';
+									var token = '${_csrf.token}';
+									$.ajax({
+										url: "/reply/nowpage",
+										type: "get",
+										dataType: "json",
+										data: {
+											nowpage: $(this).attr('value')
+											},
+										beforeSend: function(xhr){
+											xhr.setRequestHeader(header, token);
+											},
+										success: function (data) {
+											if(data != null){
+												/* console.log("전달 받은 값(페이지수): "+data); */
+												var now;
+												now += "<span class='now_data'>"+data+"<span>";
+												$("#nowp").html(now);
+												reply_count(data);
+												reply(data+1);
+												}
+											}
+											});
+								});
+								
+								<!-- prev를 누르면 해당 숫자에 맞는 댓글 페이지 새로 갱신 -->
+								$(document).on("click", ".prev", function(e){
+									e.preventDefault();
+									var header = '${_csrf.headerName}';
+									var token = '${_csrf.token}';
+									$.ajax({
+										url: "/reply/nowpage",
+										type: "get",
+										dataType: "json",
+										data: {
+											nowpage: $(this).attr('value')
+											},
+										beforeSend: function(xhr){
+											xhr.setRequestHeader(header, token);
+											},
+										success: function (data) {
+											if(data != null){
+												/* console.log("전달 받은 값(페이지수): "+data); */
+												var now;
+												now += "<span class='now_data'>"+data+"<span>";
+												$("#nowp").html(now);
+												reply_count(data);
+												reply(data+5);
+												}
+											}
+											});
+								});
+								</script>
 
 							</div>
 

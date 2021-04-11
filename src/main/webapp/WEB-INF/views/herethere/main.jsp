@@ -16,9 +16,9 @@
                                 </div>
                                 <!--Hero form -->
                                 
-                                <sec:authorize access="isAuthenticated()">
+                                <sec:authorize access="hasRole('ROLE_MEMBER')">
                                     <div class="request">
-                                       <button id="requestBtn">등록요청</button>
+                                       <button id="requestBtn" class="btn">등록요청</button>
                                     </div>
                                     <div class="requestModal">
 
@@ -79,8 +79,10 @@
                                 
                                 <form action="/herethere/local_fair" class="search-box" method='get'>
                                     <div class="input-form">
+                                    	<input type="hidden" name="page" value="1">
+										<input type="hidden" name="amount" value="10">
+										<input type="hidden" name="type" value="TC">
                                         <input type="text" name="keyword" placeholder="여기저기 검색">
-                                        <input type="hidden" name="type" value="TC">
                                         <!-- icon search -->
                                         <div class="search-form">
                                             <button><i class="ti-search"></i></button>

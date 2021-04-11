@@ -7,7 +7,7 @@ import com.project.domain.MemberVO;
 public interface MemberService {
 	
 	// 회원 가입을 위한 메서드
-	public boolean mem_register(MemberVO mv);
+	public boolean mem_register(MemberVO mv, String auth);
 
 	// 회원 아이디 확인을 위한 메서드
 	public boolean mem_check(String user_id);

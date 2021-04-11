@@ -70,6 +70,10 @@
 										</form>
 										<form id="register-form" action="/member/join" method="post" role="form" style="display: block;">
 											<div class="form-group">
+												<input type="text" name="user_Name" id="user_Name" tabindex="1" class="form-control"
+													placeholder="이름" value="">
+											</div>
+											<div class="form-group">
 												<input type="text" name="user_id" id="user_idc" tabindex="1" class="form-control"
 													placeholder="ID" value="">
 												<button type="button" id="checkbtn">아이디 중복체크</button>

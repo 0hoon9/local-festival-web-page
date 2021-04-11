@@ -13,7 +13,7 @@
 				<style type="text/css">
 					#board {
 						margin: auto;
-						width: 800px;
+						width: 900px;
 					}
 
 					thead tr th {
@@ -243,8 +243,14 @@
 									<tfoot>
 										<tr>
 											<td colspan="4">
-												<button onclick="location.href='/admin/board/update?bnum=${board.bnum}'"
-													class="btn btn-success btn-sm">수정하기</button>
+												<button onclick='location.href="/admin/board/getList?page=${cri.page}&amount=${cri.amount}&type=${cri.type}&keyword=${cri.keyword}"';
+													class="btn">목록</button>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="4">
+												<button onclick="location.href='/admin/board/update?bnum=${board.bnum}&page=${cri.page}&amount=${cri.amount}&type=${cri.type}&keyword=${cri.keyword}'"
+													class="btn">수정하기</button>
 											</td>
 										</tr>
 										<tr>
@@ -252,7 +258,11 @@
 												<form action="/admin/board/updateY" method="post">
 												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 													<input type="hidden" name="bnum" value="${board.bnum}">
-													<input type="submit" value="삭제하기" class="btn btn-warning btn-sm">
+													<input type="hidden" name="page" value="${cri.page}">
+													<input type="hidden" name="amount" value="${cri.amount}">
+													<input type="hidden" name="type" value="${cri.type}">
+													<input type="hidden" name="keyword" value="${cri.keyword}">
+													<input type="submit" value="삭제하기" class="btn">
 												</form>
 											</td>
 										</tr>

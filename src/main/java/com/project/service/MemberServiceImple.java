@@ -31,7 +31,7 @@ public class MemberServiceImple implements MemberService{
 	// 회원 가입 과정 시 위 3개의 과정 중 하나라도 빠지면 회원 가입에 문제가 생기므로 @Transactional를 이용해서 3개 중 하나만 실패해도 3개 과정 모두 실패하도록 만들었다. 
 	@Transactional
 	@Override
-	public boolean mem_register(MemberVO mv) {
+	public boolean mem_register(MemberVO mv, String auth) {
 		
 		// 1. 전달 받은 비밀 번호 암호화 후 mv에 다시 저장하는 과정
 		// 회원 가입 페이지에서 받은 비밀 번호는 암호화를 거쳐야 한다. 그렇지 않다면 개인 정보 노출의 위험이 커진다
@@ -45,8 +45,19 @@ public class MemberServiceImple implements MemberService{
 		// 2. 암호화된 비밀 번호가 입력된 mv를 전달하여 회원 가입을 하는 메서드
 		mapper.memberRegister(mv);
 		
+		System.out.println("가입 메서드 완료");
+		
 		// 3. 회원 정보가 입력된 후 해당 회원 정보와 연동된 memberAuthResister 테이블에 member회원 권한을 부여하는 메서드
-		mapper.memberAuthResister(mv.getUser_id());
+		if(auth.equals("ROLE_MEMBER")){
+			System.out.println("회원이 가입되었습니다.");
+			mapper.memberAuthResister(mv.getUser_id());
+		}
+		if(auth.equals("ROLE_ADMIN")){
+			System.out.println("운영자 가입되었습니다.");
+			mapper.adminAuthResister(mv.getUser_id());
+		}
+		
+		System.out.println("권한 부여 완료");
 		
 		return true;
 	}

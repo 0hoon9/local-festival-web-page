@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.project.mapper.ReplyMapper">
+	
+	<!-- 댓글 읽는 데이터 조회 쿼리 -->
+	<select id="reply_read" resultType="com.project.domain.ReplyVO">
+		select * from tbl_reply where bnum = #{bnum} order by RNUM
+	</select>
+	
+	<!-- 댓글 페이징을 위한 데이터 조회 쿼리 -->
+	<select id="reply_read_with_paging" resultType="com.project.domain.ReplyVO">
+		select * from
+		(select rownum rn, tr.* from (select * from tbl_reply where bnum = #{bnum} order by replydate) tr) 
+		where rn between #{cri.page} and #{cri.amount}
+	</select>
+	
+	<!-- 해당 글에 댓글 몇개 있는지 세는 조회 쿼리 -->
+	<select id="reply_count" resultType="int">
+		select count(rnum) from tbl_reply where bnum = #{bnum}
+	</select>
+	
+	<!-- 댓글 입력을 위해 사용하는 쿼리 -->
+	<insert id="reply_write">
+		insert into tbl_reply (RNUM, BNUM, REPLY, REPLYER, REPLYDATE) values (seq_rnum.nextval, #{bnum}, #{reply}, #{replyer}, SYSDATE)
+	</insert>
+		
+	<!-- 댓글 입력한 사람 확인하는 쿼리 -->
+	<select id="reply_user_search" resultType="string">
+		select replyer from tbl_reply where rnum = #{rnum}
+	</select>
+		
+	<!-- 댓글 삭제하는 쿼리 -->
+	<delete id="reply_del">
+		delete from tbl_reply where rnum = #{rnum}
+	</delete>
+		
+	</mapper>

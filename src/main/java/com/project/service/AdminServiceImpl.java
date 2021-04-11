@@ -30,11 +30,6 @@ public class AdminServiceImpl implements AdminService{
 	}
 	
 	@Override
-	public int countList() {
-		return mapper.countList();
-	}
-	
-	@Override
 	public AdminVO selectOne(Long bnum) {
 		return mapper.selectOne(bnum);
 	}
@@ -145,6 +140,11 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public void deleteResponse(Long rnum) {
 		mapper.deleteResponse(rnum);
+	}
+
+	@Override
+	public int countList(Criteria cri) {
+		return mapper.countList(cri);
 	}
 
 

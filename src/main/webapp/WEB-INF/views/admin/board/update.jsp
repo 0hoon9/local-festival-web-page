@@ -13,7 +13,7 @@
 				<style type="text/css">
 					form {
 						margin: auto;
-						width: 800px;
+						width: 900px;
 					}
 
 					.select_img img {
@@ -90,6 +90,11 @@
 							<hr>
 							<form action="/admin/board/update" method="post" enctype="multipart/form-data">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							<input type="hidden" name="page" value="${cri.page}">
+							<input type="hidden" name="amount" value="${cri.amount}">
+							<input type="hidden" name="type" value="${cri.type}">
+							<input type="hidden" name="keyword" value="${cri.keyword}">
+				
 								<div class="form-inline form-group">
 									<label>번호</label>
 									<input type="text" name="bnum" value="${board.bnum}" class="form-control" readonly>

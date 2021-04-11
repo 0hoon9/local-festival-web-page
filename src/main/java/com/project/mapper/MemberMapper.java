@@ -2,6 +2,7 @@ package com.project.mapper;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.domain.FavoriteVO;
 import com.project.domain.MemberVO;
 
 public interface MemberMapper {
@@ -15,6 +16,8 @@ public interface MemberMapper {
 	// 회원 권한 입력을 위한 메서드(여기서는 xml 파일을 참고하면 알겠지만 기본 사이트 내 회원 가입시 ROLE_MEMBER를 주도록 기본 설정함)
 	public void memberAuthResister(String user_id);
 	
+	public void adminAuthResister(String user_id);
+	
 	// 회원 아이디 중복 체크를 위한 메서드
 	public boolean memberCheck(String user_id);
 	
@@ -26,5 +29,5 @@ public interface MemberMapper {
 	
 	// 비밀번호를 찾아주기 위한 인증 메서드
 	public boolean memberFindPassword(MemberVO mv);
-
+	
 }

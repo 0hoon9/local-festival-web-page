@@ -113,7 +113,7 @@
                                     <nav>
                                         <ul id="navigation">
                                             <li><a href="/herethere/main">홈</a></li>
-                                            <li><a href="/herethere/map">간편보기</a></li>
+                                            <li><a href="/herethere/map">지도보기</a></li>
                                             <li><a>인기 축제</a>
 	                                            <ul class="submenu">
 	                                                <li><a href="/herethere/popular_recommend">추천수</a></li>
@@ -132,11 +132,18 @@
                                     </div>
                                 </sec:authorize>
 
-                                <sec:authorize access="isAuthenticated()">
+								<sec:authorize access="hasRole('ROLE_MEMBER')">
                                     <div class="header-btns d-none d-lg-block f-right">
-                                        <a href="/member/memberAdmin" class="btn">회원정보</a>
-                                        <a href="/admin/main" class="btn">관리자</a>
-                                        <a href="/sign/customLogout" class="btn">로그아웃</a>
+	                                	<a href="/member/memberAdmin" class="btn">회원정보</a>
+	                                    <a href="/sign/customLogout" class="btn">로그아웃</a>
+                                    </div>
+                                </sec:authorize>
+
+                                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                                    <div class="header-btns d-none d-lg-block f-right">
+                                    	<a href="/admin/board/getList" class="btn">관리자</a>
+	                                	<a href="/member/memberAdmin" class="btn">회원정보</a>
+	                                    <a href="/sign/customLogout" class="btn">로그아웃</a>
                                     </div>
                                 </sec:authorize>
 

@@ -17,7 +17,7 @@ public interface AdminService {
 	public List<AdminVO> getListWithPaging(Criteria cri);
 	
 	//전체 데이터 개수 조회
-	public int countList();
+	public int countList(Criteria cri);
 	
 	//데이터 한개 조회
 	public AdminVO selectOne(Long bnum);

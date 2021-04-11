@@ -12,6 +12,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ReplyPageDTO {
-	private int replyCnt; //´ñ±Û °¹¼ö
-	private List<ReplyVO> list; //´ñ±Û ¸ñ·Ï, ·¹ÄÚµå ÃÑ ¹è¿­
+	// í•´ë‹¹ DTO ì‚¬ìš© ì•ˆí•¨
+	// í˜ì´ì§•ì€ jsp í˜ì´ì§€ì—ì„œ ì „ë¶€ ì§„í–‰
+	private int replyCnt; // ëŒ“ê¸€ ìˆ«ì
+	private List<ReplyVO> list; // ìë£Œ ë°˜í™˜ìš©
 }

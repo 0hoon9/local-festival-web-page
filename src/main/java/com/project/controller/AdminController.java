@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/admin/*")
 @Slf4j
+@Secured("ROLE_ADMIN")
 public class AdminController {
 	@Setter(onMethod_=@Autowired)
 	private AdminService service;
@@ -89,8 +92,8 @@ public class AdminController {
 			admin.setThumbImg(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
 			//썸네일파일경로+파일이름 저장
 		} else {
-			admin.setImg("");
-			admin.setThumbImg("");
+			admin.setImg(File.separator + "imgUpload" +File.separator + "none.jpg");
+			admin.setThumbImg(File.separator + "imgUpload" +File.separator + "none.jpg");
 			//fileName = uploadPath + File.separator + "images" + File.separator + "none.png"
 			//이미지 첨부안하면 해당 값이 데이터에 저장
 		}
@@ -178,7 +181,7 @@ public class AdminController {
 		//페이징처리
 		PageMaker pageMaker = new PageMaker();
 	    pageMaker.setCri(cri);
-	    pageMaker.setTotalCount(service.countList()); //총 데이터 개수를 전달
+	    pageMaker.setTotalCount(service.countList(cri)); //총 데이터 개수를 전달
 		
 		model.addAttribute("list", service.getListWithPaging(cri));
 		model.addAttribute("pageMaker", pageMaker);
@@ -186,11 +189,12 @@ public class AdminController {
 	
 	//관리자페이지 한개데이터 조회/수정
 	@GetMapping({"/board/selectOne", "/board/update"})
-	public void selectOne(@RequestParam("bnum") Long bnum, Model model) {
+	public void selectOne(@RequestParam("bnum") Long bnum, Model model, @ModelAttribute("cri") Criteria cri) {
 		log.info("=====관리자 "+bnum+"번 게시글 조회/수정=====");
 		
 		model.addAttribute("board", service.selectOne(bnum));
 		//model객체를 이용해 key값 board에 selectOne메소드 저장
+		model.addAttribute("cri", cri);
 		
 		service.plusCnt(bnum);
 		//조회수+1
@@ -232,8 +236,8 @@ public class AdminController {
 		if(file.getOriginalFilename() != null && file.getOriginalFilename() != "") {
 			
 		  //기존 파일을 삭제
-		  new File(uploadPath + req.getParameter("img")).delete();
-		  new File(uploadPath + req.getParameter("thumbImg")).delete();
+//		  new File(uploadPath + req.getParameter("img")).delete();
+//		  new File(uploadPath + req.getParameter("thumbImg")).delete();
 		  
 		  //새로 첨부한 파일을 등록
 		  String imgUploadPath = uploadPath + File.separator + "imgUpload";
@@ -274,12 +278,18 @@ public class AdminController {
 	
 	//관리자페이지 삭제여부를 'y'으로 변경
 	@PostMapping("/board/updateY")
-	public String updateY(@RequestParam("bnum") Long bnum) {
+	public String updateY(@RequestParam("bnum") Long bnum, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 
 		service.updateY(bnum);
 		//bnum을 이용해서 삭제여부 'y'로 변경
 		
 		log.info("=====관리자 "+bnum+"번 게시글 삭제여부 'y'로 변경=====");
+		
+		//리다이렉트시 각 정보 포함
+		rttr.addAttribute("page", cri.getPage());
+		rttr.addAttribute("amount", cri.getAmount());
+		rttr.addAttribute("type", cri.getType());
+		rttr.addAttribute("keyword", cri.getKeyword());
 		
 		return "redirect:/admin/board/getList";
 		//전체조회페이지로 이동

@@ -21,6 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	// 회원 가입 및 회원 패스워드 수정 등에 관한 컨트롤러
 	
+	@GetMapping("/test")
+	public void test() {
+		
+	}
+	
 	MemberService service;
 	
 	// @PreAuthorize("isAnonymous()") - 어노테이션을 이용해 회원가입 페이지("/join")는 로그인 하지 않은 누구나 접속 가능
@@ -42,11 +47,29 @@ public class MemberController {
 	@PostMapping("/join")
 	public String register(MemberVO mv) {
 		
+		String auth = "ROLE_MEMBER";
 		// 회원 가입 페이지에서 받은 정보를 mv에 담아서 서비스로 전달함
-		service.mem_register(mv);
+		service.mem_register(mv, auth);
 		
 		return "redirect:/herethere/main";
 	}
+	
+	
+	@GetMapping("/join_admin")
+	public void admin_resiter() {
+		
+	}
+	
+	@PostMapping("/join_admin")
+		public String admin_register(MemberVO mv) {
+			
+			String auth = "ROLE_ADMIN";
+			
+			// 회원 가입 페이지에서 받은 정보를 mv에 담아서 서비스로 전달함
+			service.mem_register(mv, auth);
+			
+			return "redirect:/herethere/main";
+		}
 	
 	// 회원 정보 확인(/memberAdmin) 페이지 접속 메서드
 	// @PreAuthorize("isAuthenticated()") 어노테이션을 이용해 회원 로그인 된 사람만 접속 가능하도록 만듦
